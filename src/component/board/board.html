@@ -1,0 +1,19 @@
+<table>
+  @for (row of board$ | async; track $index; let rowIndex = $index){
+  <tr>
+    @for (square of row; track $index; let colIndex = $index){
+    <td>
+      <square
+        [row]="rowIndex"
+        [col]="colIndex"
+        [piece]="square"
+        [isLight]="isLight(rowIndex, colIndex)"
+        [isLegal]="isLegal(rowIndex, colIndex)"
+        [isSelected]="isSelected(rowIndex, colIndex)"
+        (squareClick)="onSquareClick($event)"
+      ></square>
+    </td>
+    }
+  </tr>
+  }
+</table>

@@ -1,0 +1,11 @@
+<div 
+  class="square" 
+  [class.light]="isLight" 
+  [class.dark]="!isLight" 
+  [class.legal]="isLegal" 
+  [class.capture]="isLegal && piece"
+  [class.selected]="isSelected" 
+  (click)="handleSquareClick()">
+  <div *ngIf="isLegal && !piece" class="legal-dot"></div>
+  <piece *ngIf="piece" [piece]="piece"></piece>
+</div>
