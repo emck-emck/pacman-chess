@@ -18,6 +18,7 @@ export class BoardComponent {
   legalMoves$ = this.gameState.legalMoves$;
 
   legalMoveSet = new Set<string>();
+  selected: string = '';
 
   constructor(private gameState: GameStateService) {}
 
@@ -31,6 +32,9 @@ export class BoardComponent {
         moves.map(m => `${m.row},${m.col}`)
       );
     });
+    this.gameState.selected$.subscribe(sel => {
+      sel? this.selected = `${sel.row},${sel.col}`: this.selected = ''
+    });
   }
 
   isLight(row: number, col: number): boolean {
@@ -42,6 +46,6 @@ export class BoardComponent {
   }
 
   isSelected(row: number, col: number): boolean{
-    return false;
+    return (this.selected == `${row},${col}`);
   }
 }
