@@ -20,21 +20,14 @@ export class GameStateService {
   selected$ = this.selectedSubject.asObservable();
   legalMoves$ = this.legalMovesSubject.asObservable();
 
-  getTurn() {
-    return this.engine.getTurn();
-  }
-
   handleSquareClick(pos: Position) {
     const piece = this.engine.getPieceAt(pos);
 
     // First click
     if (!this.selectedInternal) {
-      if (piece && piece.colour === this.engine.getTurn()) {
+      if (piece && piece.colour === this.engine.currentTurn) {
         this.selectedInternal = pos;
         this.legalMovesInternal = this.engine.getLegalMoves(pos);
-
-        //DELETE ME
-        console.log(this.legalMovesInternal);
 
         this.selectedSubject.next(pos);
         this.legalMovesSubject.next(this.legalMovesInternal);

@@ -7,31 +7,28 @@ import { initBoard } from './board/board-factory';
 import { checkSquare } from './utils/moves-utils';
 
 export class PChessEngine {
-  private currentTurn: Colour = 'white';
+  private sideToMove: 'white' | 'black' = 'white';
+
   board: Board;
 
   constructor() {
     this.board = initBoard();
   }
 
-  test(pos: Position) {
-    this.board[pos.row][pos.col] = null;
+  get currentTurn(): 'white' | 'black' {
+    return this.sideToMove;
   }
 
-  getBoard() {
+  swapTurn() {
+    this.sideToMove = this.sideToMove === 'white' ? 'black' : 'white';
+  }
+
+  getBoard(): Board {
     return this.board;
-  }
-
-  getTurn() {
-    return this.currentTurn;
   }
 
   getPieceAt(pos: Position): (Piece | null){
     return checkSquare(pos, this.board);
-  }
-
-  isLegalMove(from: Position, to: Position): boolean{
-    return true;
   }
 
   getLegalMoves(pos: Position): Position[]{
@@ -39,12 +36,12 @@ export class PChessEngine {
   }
 
   move(from: Position, to: Position) {
-    console.log("Moving piece");
     const pHolder: (Piece | null) = this.board[from.row][from.col];
     if(pHolder){
       pHolder.hasMoved = true;
       this.board[from.row][from.col] = null;
       this.board[to.row][to.col] = pHolder;
+      this.swapTurn();
     }
   }
 }
