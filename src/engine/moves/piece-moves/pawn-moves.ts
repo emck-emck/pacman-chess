@@ -48,7 +48,5 @@ export function getPawnMoves(
     ret.push(captureRight);
   }
 
-  piece.hasMoved = true;
-
   return ret;
 }

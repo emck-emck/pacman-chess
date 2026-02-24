@@ -42,6 +42,7 @@ export class PChessEngine {
     console.log("Moving piece");
     const pHolder: (Piece | null) = this.board[from.row][from.col];
     if(pHolder){
+      pHolder.hasMoved = true;
       this.board[from.row][from.col] = null;
       this.board[to.row][to.col] = pHolder;
     }
