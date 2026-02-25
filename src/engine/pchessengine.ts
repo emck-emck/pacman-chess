@@ -2,9 +2,9 @@ import { Board } from '../models/board';
 import { Piece, Colour } from '../models/piece';
 import { Position } from '../models/position';
 
-import { checkLegalMoves } from './moves/legal-moves';
+import { checkLegalMoves } from './moves/moves';
 import { initBoard } from './board/board-factory';
-import { checkSquare } from './utils/moves-utils';
+import { checkSquare, positionKey } from './utils/engine-utils';
 
 export class PChessEngine {
   private sideToMove: 'white' | 'black' = 'white';
@@ -29,6 +29,10 @@ export class PChessEngine {
 
   getPieceAt(pos: Position): (Piece | null){
     return checkSquare(pos, this.board);
+  }
+
+  getPositionKey(pos: Position): string {
+    return positionKey(pos);
   }
 
   getLegalMoves(pos: Position): Position[]{

@@ -1,10 +1,11 @@
-import { Piece } from '../../../../models/piece';
-import { Position } from '../../../../models/position';
-import { Board } from '../../../../models/board';
-import { checkSquare } from '../../../utils/moves-utils';
-import { BOARDSIZE } from '../../../constants';
+import { Piece } from '../../../../../models/piece';
+import { Position } from '../../../../../models/position';
+import { Board } from '../../../../../models/board';
+import { BOARDSIZE } from '../../../../constants';
 
-export function getKNMoves(
+import { checkSquare } from '../../../../utils/engine-utils';
+
+export function getKNAttacks(
   piece: Piece,
   board: Board,
   moves: Position[]

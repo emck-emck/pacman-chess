@@ -3,7 +3,6 @@ import { BehaviorSubject } from 'rxjs';
 import { PChessEngine } from '../engine/pchessengine';
 import { Position } from '../models/position';
 import { Board } from '../models/board';
-import { positionKey } from '../engine/utils/moves-utils';
 
 @Injectable({ providedIn: 'root' })
 export class GameStateService {
@@ -39,9 +38,9 @@ export class GameStateService {
 
     // Second click
     const validMoveSet = new Set(
-      this.legalMovesInternal.map(positionKey)
+      this.legalMovesInternal.map(this.engine.getPositionKey)
     );
-    if (validMoveSet.has(positionKey(pos))) {
+    if (validMoveSet.has(this.engine.getPositionKey(pos))) {
       this.engine.move(this.selectedInternal, pos);
       this.boardSubject.next(this.engine.getBoard());
       this.turnSubject.next(this.engine.currentTurn);

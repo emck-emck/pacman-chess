@@ -1,10 +1,10 @@
-import { Piece } from '../../../models/piece';
-import { Position } from '../../../models/position';
-import { Board } from '../../../models/board';
-import { moveColLeft, moveColRight } from '../../utils/moves-utils';
-import { getKNMoves } from './misc-moves/k-n-moves';
+import { Piece } from '../../../../models/piece';
+import { Position } from '../../../../models/position';
+import { Board } from '../../../../models/board';
+import { moveColLeft, moveColRight } from '../../moves-utils';
+import { getKNAttacks } from './misc-attacks/k-n-attacks';
 
-export function getKnightMoves(
+export function getKnightAttacks(
   piece: Piece,
   pos: Position,
   board: Board
@@ -21,5 +21,5 @@ export function getKnightMoves(
     {row: pos.row+2, col: moveColLeft(pos.col, 1)}
   ];
 
-  return getKNMoves(piece, board, knightMoves);
+  return getKNAttacks(piece, board, knightMoves);
 }

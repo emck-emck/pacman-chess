@@ -1,11 +1,12 @@
-import { Piece } from '../../../models/piece';
-import { Position } from '../../../models/position';
-import { Board } from '../../../models/board';
-import { BOARDSIZE } from '../../constants';
+import { Piece } from '../../../../models/piece';
+import { Position } from '../../../../models/position';
+import { Board } from '../../../../models/board';
+import { BOARDSIZE } from '../../../constants';
 
-import { checkSquare, moveColLeft, moveColRight } from '../../utils/moves-utils';
+import { checkSquare } from '../../../utils/engine-utils';
+import { moveColLeft, moveColRight } from '../../moves-utils';
 
-export function getPawnMoves(
+export function getPawnAttacks(
   piece: Piece,
   pos: Position,
   board: Board

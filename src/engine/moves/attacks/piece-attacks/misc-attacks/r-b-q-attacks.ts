@@ -1,15 +1,17 @@
-import { Piece } from '../../../../models/piece';
-import { Position } from '../../../../models/position';
-import { Board } from '../../../../models/board';
-import { BOARDSIZE } from '../../../constants';
-import { checkSquare, moveColLeft, moveColRight } from '../../../utils/moves-utils';
+import { Piece } from '../../../../../models/piece';
+import { Position } from '../../../../../models/position';
+import { Board } from '../../../../../models/board';
+import { BOARDSIZE } from '../../../../constants';
+
+import { moveColLeft, moveColRight } from '../../../moves-utils';
+import { checkSquare } from '../../../../utils/engine-utils';
 
 /**
  * The problems:
  * 1) Mod logic for going right - FIXED
  * 2) The "to" variable is seemingly mutating the data in bishopDirections even though it's constant..?
  */
-export function getRBQMoves(
+export function getRBQAttacks(
   piece: Piece,
   pos: Position,
   board: Board,

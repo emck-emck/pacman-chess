@@ -1,15 +1,7 @@
-import { Piece } from '../../models/piece';
 import { Position } from '../../models/position';
-import { Board } from '../../models/board';
 import { BOARDSIZE } from '../constants';
 
-export function checkSquare(pos: Position, board: Board): (Piece | null) {
-  return board[pos.row][pos.col];
-}
-
-export function positionKey(pos: Position): string {
-  return `${pos.row},${pos.col}`;
-} 
+import { positionKey } from '../utils/engine-utils';
 
 export function uniquePositions(moves: Position[]): Position[] {
   const seen = new Set<string>();
