@@ -2,49 +2,54 @@ import { Board } from '../models/board';
 import { Piece, Colour } from '../models/piece';
 import { Position } from '../models/position';
 
-import { checkLegalMoves } from './moves/legal-moves';
+import { checkLegalMoves } from './moves/moves';
 import { initBoard } from './board/board-factory';
-import { checkSquare } from './utils/moves-utils';
+import { checkSquare, positionKey } from './utils/engine-utils';
 
 export class PChessEngine {
-  private currentTurn: Colour = 'white';
-  board: Board;
+  private sideToMove: 'white' | 'black' = 'white';
+
+  _board: Board;
 
   constructor() {
-    this.board = initBoard();
+    this._board = initBoard();
   }
 
-  test(pos: Position) {
-    this.board[pos.row][pos.col] = null;
+  get board(): Board {
+    return this._board;
   }
 
-  getBoard() {
-    return this.board;
+  get currentTurn(): 'white' | 'black' {
+    return this.sideToMove;
   }
 
-  getTurn() {
-    return this.currentTurn;
+  getBoardClone(){
+    return structuredClone(this._board);
+  }
+
+  swapTurn() {
+    this.sideToMove = this.sideToMove === 'white' ? 'black' : 'white';
   }
 
   getPieceAt(pos: Position): (Piece | null){
-    return checkSquare(pos, this.board);
+    return checkSquare(pos, this._board);
   }
 
-  isLegalMove(from: Position, to: Position): boolean{
-    return true;
+  getPositionKey(pos: Position): string {
+    return positionKey(pos);
   }
 
   getLegalMoves(pos: Position): Position[]{
-    return checkLegalMoves(this.board[pos.row][pos.col], pos, this.board);
+    return checkLegalMoves(this._board[pos.row][pos.col], pos, this.getBoardClone());
   }
 
   move(from: Position, to: Position) {
-    console.log("Moving piece");
-    const pHolder: (Piece | null) = this.board[from.row][from.col];
+    const pHolder: (Piece | null) = this._board[from.row][from.col];
     if(pHolder){
       pHolder.hasMoved = true;
-      this.board[from.row][from.col] = null;
-      this.board[to.row][to.col] = pHolder;
+      this._board[from.row][from.col] = null;
+      this._board[to.row][to.col] = pHolder;
+      this.swapTurn();
     }
   }
 }

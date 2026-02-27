@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AsyncPipe } from '@angular/common';
+import { AsyncPipe, TitleCasePipe } from '@angular/common';
 
 import { Position } from '../../models/position';
 
@@ -10,14 +10,16 @@ import { GameStateService } from '../../service/gamestateservice';
   selector: 'board',
   templateUrl: './board.html',
   styleUrl: './board.css',
-  imports: [AsyncPipe, SquareComponent],
+  imports: [AsyncPipe, TitleCasePipe, SquareComponent],
 })
 export class BoardComponent {
   board$ = this.gameState.board$;
   selectedPiece$ = this.gameState.selected$;
   legalMoves$ = this.gameState.legalMoves$;
+  turn$ = this.gameState.turn$;
 
   legalMoveSet = new Set<string>();
+  selected: string = '';
 
   constructor(private gameState: GameStateService) {}
 
@@ -31,6 +33,9 @@ export class BoardComponent {
         moves.map(m => `${m.row},${m.col}`)
       );
     });
+    this.gameState.selected$.subscribe(sel => {
+      sel? this.selected = `${sel.row},${sel.col}`: this.selected = ''
+    });
   }
 
   isLight(row: number, col: number): boolean {
@@ -42,6 +47,6 @@ export class BoardComponent {
   }
 
   isSelected(row: number, col: number): boolean{
-    return false;
+    return (this.selected == `${row},${col}`);
   }
 }

@@ -3,7 +3,6 @@ import { BehaviorSubject } from 'rxjs';
 import { PChessEngine } from '../engine/pchessengine';
 import { Position } from '../models/position';
 import { Board } from '../models/board';
-import { positionKey } from '../engine/utils/moves-utils';
 
 @Injectable({ providedIn: 'root' })
 export class GameStateService {
@@ -12,29 +11,24 @@ export class GameStateService {
   private selectedInternal: Position | null = null;
   private legalMovesInternal: Position[] = [];
 
-  private boardSubject = new BehaviorSubject<Board>(this.engine.getBoard());
+  private boardSubject = new BehaviorSubject<Board>(this.engine.board);
   private selectedSubject = new BehaviorSubject<Position | null>(null);
   private legalMovesSubject = new BehaviorSubject<Position[]>([]);
+  private turnSubject = new BehaviorSubject<'white' | 'black'>(this.engine.currentTurn);
 
   board$ = this.boardSubject.asObservable();
   selected$ = this.selectedSubject.asObservable();
   legalMoves$ = this.legalMovesSubject.asObservable();
-
-  getTurn() {
-    return this.engine.getTurn();
-  }
+  turn$ = this.turnSubject.asObservable();
 
   handleSquareClick(pos: Position) {
     const piece = this.engine.getPieceAt(pos);
 
     // First click
     if (!this.selectedInternal) {
-      if (piece && piece.colour === this.engine.getTurn()) {
+      if (piece && piece.colour === this.engine.currentTurn) {
         this.selectedInternal = pos;
         this.legalMovesInternal = this.engine.getLegalMoves(pos);
-
-        //DELETE ME
-        console.log(this.legalMovesInternal);
 
         this.selectedSubject.next(pos);
         this.legalMovesSubject.next(this.legalMovesInternal);
@@ -44,11 +38,12 @@ export class GameStateService {
 
     // Second click
     const validMoveSet = new Set(
-      this.legalMovesInternal.map(positionKey)
+      this.legalMovesInternal.map(this.engine.getPositionKey)
     );
-    if (validMoveSet.has(positionKey(pos))) {
+    if (validMoveSet.has(this.engine.getPositionKey(pos))) {
       this.engine.move(this.selectedInternal, pos);
-      this.boardSubject.next(this.engine.getBoard());
+      this.boardSubject.next(this.engine.board);
+      this.turnSubject.next(this.engine.currentTurn);
     }
 
     // Reset selection either way

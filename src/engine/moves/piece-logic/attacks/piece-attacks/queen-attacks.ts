@@ -1,10 +1,10 @@
-import { Piece } from '../../../models/piece';
-import { Position } from '../../../models/position';
-import { Board } from '../../../models/board';
+import { Piece } from '../../../../../models/piece';
+import { Position } from '../../../../../models/position';
+import { Board } from '../../../../../models/board';
 
-import { getRBQMoves } from './misc-moves/r-b-q-moves';
+import { getRBQAttacks } from './misc-attacks/r-b-q-attacks';
 
-export function getQueenMoves(
+export function getQueenAttacks(
   piece: Piece,
   pos: Position,
   board: Board
@@ -23,5 +23,5 @@ export function getQueenMoves(
     {row: 1, col: 1}
   ];
   
-    return getRBQMoves(piece, pos, board, queenDirections);
+    return getRBQAttacks(piece, pos, board, queenDirections);
 }
