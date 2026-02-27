@@ -11,7 +11,7 @@ export class GameStateService {
   private selectedInternal: Position | null = null;
   private legalMovesInternal: Position[] = [];
 
-  private boardSubject = new BehaviorSubject<Board>(this.engine.getBoard());
+  private boardSubject = new BehaviorSubject<Board>(this.engine.board);
   private selectedSubject = new BehaviorSubject<Position | null>(null);
   private legalMovesSubject = new BehaviorSubject<Position[]>([]);
   private turnSubject = new BehaviorSubject<'white' | 'black'>(this.engine.currentTurn);
@@ -42,7 +42,7 @@ export class GameStateService {
     );
     if (validMoveSet.has(this.engine.getPositionKey(pos))) {
       this.engine.move(this.selectedInternal, pos);
-      this.boardSubject.next(this.engine.getBoard());
+      this.boardSubject.next(this.engine.board);
       this.turnSubject.next(this.engine.currentTurn);
     }
 

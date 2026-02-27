@@ -1,6 +1,6 @@
-import { Piece } from '../../../../models/piece';
-import { Position } from '../../../../models/position';
-import { Board } from '../../../../models/board';
+import { Piece } from '../../../../../models/piece';
+import { Position } from '../../../../../models/position';
+import { Board } from '../../../../../models/board';
 
 import { getRBQAttacks } from './misc-attacks/r-b-q-attacks';
 

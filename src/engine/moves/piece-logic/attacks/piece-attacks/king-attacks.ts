@@ -1,7 +1,7 @@
-import { Piece } from '../../../../models/piece';
-import { Position } from '../../../../models/position';
-import { Board } from '../../../../models/board';
-import { moveColLeft, moveColRight } from '../../moves-utils';
+import { Piece } from '../../../../../models/piece';
+import { Position } from '../../../../../models/position';
+import { Board } from '../../../../../models/board';
+import { moveColLeft, moveColRight } from '../../../moves-utils';
 import { getKNAttacks } from './misc-attacks/k-n-attacks';
 
 export function getKingAttacks(

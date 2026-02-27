@@ -1,26 +1,20 @@
 import { Piece } from '../../../../models/piece';
 import { Position } from '../../../../models/position';
 import { Board } from '../../../../models/board';
-import { BOARDSIZE } from '../../../constants';
 
 import { checkSquare } from '../../../utils/engine-utils';
-import { moveColLeft, moveColRight } from '../../moves-utils';
 
-export function getPawnAttacks(
+export function getPawnMoves(
   piece: Piece,
   pos: Position,
   board: Board
 ): Position[] {
   const up: number = piece.colour == 'white'? -1: 1;
   const moveUpOne: Position = {row: pos.row + up, col: pos.col};
-  const moveUpTwo: Position = {row: pos.row + (up*2), col: pos.col};  
-  const captureLeft: Position = {row: pos.row + up, col: moveColLeft(pos.col, 1)};
-  const captureRight: Position = {row: pos.row + up, col: moveColRight(pos.col, 1)};
+  const moveUpTwo: Position = {row: pos.row + (up*2), col: pos.col}; 
 
   let ret: Position[] = [];
   let occPiece: Piece | null = null;
-
-  //PROMOTION LOGIC NEEDED
 
   // Check in front of piece
   occPiece = checkSquare(moveUpOne, board);
@@ -35,18 +29,6 @@ export function getPawnAttacks(
     if (!occPiece) {
       ret.push(moveUpTwo);
     }
-  }
-
-  //Check diagonal left of piece
-  occPiece = checkSquare(captureLeft, board);
-  if (occPiece && (occPiece.colour != piece.colour)) {
-    ret.push(captureLeft);
-  }
-
-  //Check diagonal right of piece
-  occPiece = checkSquare(captureRight, board);
-  if (occPiece && (occPiece.colour != piece.colour)) {
-    ret.push(captureRight);
   }
 
   return ret;
