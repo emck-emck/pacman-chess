@@ -17,32 +17,32 @@ export class PieceComponent {
         case 'white':
           switch (this.piece.type) {
             case 'pawn':
-              return 'WP';
+              return '♙';
             case 'rook':
-              return 'WR';
+              return '♖';
             case 'knight':
-              return 'WN';
+              return '♘';
             case 'bishop':
-              return 'WB';
+              return '♗';
             case 'queen':
-              return 'WQ';
+              return '♕';
             case 'king':
-              return 'WK';
+              return '♔';
           }
         case 'black':
           switch (this.piece.type) {
             case 'pawn':
-              return 'BP';
+              return '♟';
             case 'rook':
-              return 'BR';
+              return '♜';
             case 'knight':
-              return 'BN';
+              return '♞';
             case 'bishop':
-              return 'BB';
+              return '♝';
             case 'queen':
-              return 'BQ';
+              return '♛';
             case 'king':
-              return 'BK';
+              return '♚';
           }
       }
     }
