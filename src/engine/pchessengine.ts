@@ -1,6 +1,7 @@
 import { Board } from '../models/board';
 import { Piece, Colour } from '../models/piece';
 import { Position } from '../models/position';
+import { Move } from '../models/move';
 
 import { checkLegalMoves } from './moves/moves';
 import { initBoard } from './board/board-factory';
@@ -10,9 +11,11 @@ export class PChessEngine {
   private sideToMove: 'white' | 'black' = 'white';
 
   _board: Board;
+  _currentMoves: Move[];
 
   constructor() {
     this._board = initBoard();
+    this._currentMoves = [];
   }
 
   get board(): Board {
@@ -40,7 +43,15 @@ export class PChessEngine {
   }
 
   getLegalMoves(pos: Position): Position[]{
-    return checkLegalMoves(this._board[pos.row][pos.col], pos, this.getBoardClone());
+    let legalMoves: Position[] = [];
+
+    this._currentMoves = checkLegalMoves(this._board[pos.row][pos.col], pos, this.getBoardClone());
+
+    for(const m of this._currentMoves){
+      legalMoves.push(m.to);
+    }
+
+    return legalMoves;
   }
 
   move(from: Position, to: Position) {

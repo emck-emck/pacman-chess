@@ -1,16 +1,17 @@
-import { Position } from '../../models/position';
-import { Board } from '../../models/board';
-import { Piece, Colour } from '../../models/piece';
-import { BOARDSIZE } from '../constants';
+import { Position } from '../../../models/position';
+import { Board } from '../../../models/board';
+import { Piece, Colour } from '../../../models/piece';
+import { Move } from '../../../models/move';
+import { BOARDSIZE } from '../../constants';
 
-import { positionKey } from '../utils/engine-utils';
-import { getAttacks } from './piece-logic/attacks/attacks';
+import { positionKey } from '../../utils/engine-utils';
+import { getAttacks } from '../piece-logic/attacks/attacks';
 
-export function uniquePositions(moves: Position[]): Position[] {
+export function uniqueMoves(moves: Move[]): Move[] {
   const seen = new Set<string>();
 
   return moves.filter(move => {
-    const key = positionKey(move);
+    const key = positionKey(move.to);
 
     if (seen.has(key)) {
       return false;
@@ -39,8 +40,8 @@ export function isInCheck(colour: Colour, kingPos: Position, board: Board): bool
       const pos: Position = {row: row, col: col}; //Get piece position
       const attacks = getAttacks(piece, pos, board);
       if (attacks.some(p =>                                                                                                                                    
-        p.row === kingPos.row &&
-        p.col === kingPos.col
+        p.to.row === kingPos.row &&
+        p.to.col === kingPos.col
       )) {
         return true;
       }

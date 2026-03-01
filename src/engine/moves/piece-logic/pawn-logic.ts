@@ -1,8 +1,9 @@
 import { Piece } from '../../../models/piece';
 import { Position } from '../../../models/position';
 import { Board } from '../../../models/board';
+import { Move } from '../../../models/move';
 
-import { simultateMove, isInCheck, findKing } from '../moves-utils';
+import { simultateMove, isInCheck, findKing } from '../moves-utils/moves-utils';
 
 import { getAttacks } from './attacks/attacks';
 import { getPawnMoves } from './misc-piece-logic/pawn-moves';
@@ -11,12 +12,12 @@ export function pawnLogic(
   piece: Piece,
   pos: Position,
   board: Board
-): Position[] {
+): Move[] {
   const colour = piece.colour;
-  let moves: Position[] = [];
+  let moves: Move[] = [];
   const kingPos: Position | null = findKing(colour, board);
-  const possibleAttacks: Position[] = getAttacks(piece, pos, board);
-  const possibleMoves: Position[] = getPawnMoves(piece, pos, board);
+  const possibleAttacks: Move[] = getAttacks(piece, pos, board);
+  const possibleMoves: Move[] = getPawnMoves(piece, pos, board);
   
   if(!kingPos) return [];
 
@@ -29,7 +30,7 @@ export function pawnLogic(
   }
 
   return moves.filter(move => {
-    const sim: Board = simultateMove(pos, move, board);
+    const sim: Board = simultateMove(pos, move.to, board);
     return !isInCheck(colour, kingPos, sim);
   });
 }

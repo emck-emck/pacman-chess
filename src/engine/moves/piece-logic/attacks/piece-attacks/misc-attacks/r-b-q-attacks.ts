@@ -1,25 +1,24 @@
 import { Piece } from '../../../../../../models/piece';
 import { Position } from '../../../../../../models/position';
 import { Board } from '../../../../../../models/board';
+import { Move } from '../../../../../../models/move';
 import { BOARDSIZE } from '../../../../../constants';
 
-import { moveColLeft, moveColRight } from '../../../../moves-utils';
+import { moveColLeft, moveColRight } from '../../../../moves-utils/moves-utils';
+import { generateNormalMove, generateCaptureMove } from '../../../../moves-utils/moves-factory';
+
 import { checkSquare } from '../../../../../utils/engine-utils';
 
-/**
- * The problems:
- * 1) Mod logic for going right - FIXED
- * 2) The "to" variable is seemingly mutating the data in bishopDirections even though it's constant..?
- */
+
 export function getRBQAttacks(
   piece: Piece,
   pos: Position,
   board: Board,
   directions: Position[]
-): Position[] {
+): Move[] {
   let to: Position;
   let occPiece: Piece | null = null;
-  let ret: Position[] = [];
+  let ret: Move[] = [];
 
   for(const d of directions){
       for(let i = 1; i < BOARDSIZE ; i++){ //Variable i is equal to the number of diagonal squares away a piece is
@@ -42,10 +41,10 @@ export function getRBQAttacks(
 
         occPiece = checkSquare(to, board);
         if(!occPiece){
-          ret.push({row: to.row, col: to.col});
+          ret.push(generateNormalMove(pos, to));
         }else{
           if(piece.colour != occPiece.colour){
-            ret.push({row: to.row, col: to.col});
+            ret.push(generateCaptureMove(pos, to, to));
           }
           break;
         }
