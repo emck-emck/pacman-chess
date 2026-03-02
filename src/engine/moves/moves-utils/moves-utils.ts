@@ -7,27 +7,17 @@ import { BOARDSIZE } from '../../constants';
 import { positionKey } from '../../utils/engine-utils';
 import { getAttacks } from '../piece-logic/attacks/attacks';
 
-export function uniqueMoves(moves: Move[]): Move[] {
-  const seen = new Set<string>();
-
-  return moves.filter(move => {
-    const key = positionKey(move.to);
-
-    if (seen.has(key)) {
-      return false;
+export function findKing (colour: Colour, board: Board): Position | null{
+  for(let row = 0; row < board.length; row++){
+    for(let col = 0; col < board[row].length; col++){
+      const piece: Piece | null = board[row][col];
+      if(!piece) continue; //Don't check empty squares
+      if(piece.colour === colour && piece.type === 'king'){
+        return {row: row, col: col};
+      }
     }
-
-    seen.add(key);
-    return true;
-  });
-}
-
-export function simultateMove(from: Position, to: Position, board: Board): Board{
-  let simBoard: Board = structuredClone(board);
-  const piece = simBoard[from.row][from.col];
-  simBoard[to.row][to.col] = piece;
-  simBoard[from.row][from.col] = null;
-  return simBoard;
+  }
+  return null;
 }
 
 export function isInCheck(colour: Colour, kingPos: Position, board: Board): boolean{
@@ -51,19 +41,6 @@ export function isInCheck(colour: Colour, kingPos: Position, board: Board): bool
   return false;
 }
 
-export function findKing (colour: Colour, board: Board): Position | null{
-  for(let row = 0; row < board.length; row++){
-    for(let col = 0; col < board[row].length; col++){
-      const piece: Piece | null = board[row][col];
-      if(!piece) continue; //Don't check empty squares
-      if(piece.colour == colour && piece.type == 'king'){
-        return {row: row, col: col};
-      }
-    }
-  }
-  return null;
-}
-
 //MOVEBY MUST BE LESS THAN BOARD SIZE
 export function moveColLeft(col: number, moveBy: number): number {
   return ((col + (BOARDSIZE - moveBy)) % BOARDSIZE)
@@ -71,4 +48,48 @@ export function moveColLeft(col: number, moveBy: number): number {
 
 export function moveColRight(col: number, moveBy: number): number{
   return ((col + moveBy) % BOARDSIZE);
+}
+
+export function simultateMove(move: Move, board: Board): Board{
+  let simBoard: Board = structuredClone(board);
+  const piece: (Piece | null) = simBoard[move.from.row][move.from.col];
+  // Implement capture tracking
+      if(move.capture){
+        simBoard[move.capture.row][move.capture.col] = null;
+      }
+      // MOVE LOGIC
+      switch(move.type){
+        case 'normal':
+          simBoard[move.from.row][move.from.col] = null;
+          simBoard[move.to.row][move.to.col] = piece;
+          break;
+        case 'capture':
+          simBoard[move.from.row][move.from.col] = null;
+          simBoard[move.to.row][move.to.col] = piece;
+          break;
+        case 'en-passant':
+          simBoard[move.from.row][move.from.col] = null;
+          simBoard[move.to.row][move.to.col] = piece;
+          break;
+        case 'castle':
+          break;
+        case 'promotion':
+          break;
+      }
+  return simBoard;
+}
+
+export function uniqueMoves(moves: Move[]): Move[] {
+  const seen = new Set<string>();
+
+  return moves.filter(move => {
+    const key = positionKey(move.to);
+
+    if (seen.has(key)) {
+      return false;
+    }
+
+    seen.add(key);
+    return true;
+  });
 }

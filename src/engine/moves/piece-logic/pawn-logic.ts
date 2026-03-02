@@ -7,10 +7,12 @@ import { simultateMove, isInCheck, findKing } from '../moves-utils/moves-utils';
 
 import { getAttacks } from './attacks/attacks';
 import { getPawnMoves } from './misc-piece-logic/pawn-moves';
+import { getPawnEnPassant } from './misc-piece-logic/pawn-en-passant';
 
 export function pawnLogic(
   piece: Piece,
   pos: Position,
+  enPassantTarget: (Position | null),
   board: Board
 ): Move[] {
   const colour = piece.colour;
@@ -18,6 +20,7 @@ export function pawnLogic(
   const kingPos: Position | null = findKing(colour, board);
   const possibleAttacks: Move[] = getAttacks(piece, pos, board);
   const possibleMoves: Move[] = getPawnMoves(piece, pos, board);
+  const possibleEnPassant: Move[] = getPawnEnPassant(piece, pos, enPassantTarget);
   
   if(!kingPos) return [];
 
@@ -29,8 +32,12 @@ export function pawnLogic(
     moves.push(p);
   }
 
+  for(const p of possibleEnPassant){
+    moves.push(p);
+  }
+
   return moves.filter(move => {
-    const sim: Board = simultateMove(pos, move.to, board);
+    const sim: Board = simultateMove(move, board);
     return !isInCheck(colour, kingPos, sim);
   });
 }

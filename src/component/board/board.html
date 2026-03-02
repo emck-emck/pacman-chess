@@ -1,4 +1,5 @@
-<h3>{{(turn$ | async) | titlecase}} to move</h3>
+<h3 *ngIf="!checkFlag">{{(turn$ | async) | titlecase}} to move</h3>
+<h3 *ngIf="checkFlag">{{(turn$ | async) | titlecase}} to move, is in check</h3>
 <table>
   @for (row of board$ | async; track $index; let rowIndex = $index){
   <tr>

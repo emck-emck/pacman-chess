@@ -19,7 +19,7 @@ export function pieceLogic(
   if (!kingPos) return [];
 
   return possible.filter(move => {
-    const sim: Board = simultateMove(pos, move.to, board);
+    const sim: Board = simultateMove(move, board);
     return !isInCheck(colour, kingPos, sim);
   });
 }

@@ -27,7 +27,7 @@ export function kingLogic(
   //Normal piece move logic
   let possible = getAttacks(piece, pos, board);
   possible = possible.filter(move => {
-    const sim: Board = simultateMove(pos, move.to, board);
+    const sim: Board = simultateMove(move, board);
     return !isInCheck(colour, move.to, sim);
   });
 

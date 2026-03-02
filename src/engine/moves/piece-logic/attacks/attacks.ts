@@ -10,8 +10,6 @@ import { getBishopAttacks } from './piece-attacks/bishop-attacks';
 import { getQueenAttacks } from './piece-attacks/queen-attacks';
 import { getKingAttacks } from './piece-attacks/king-attacks';
 
-import { uniqueMoves } from '../../moves-utils/moves-utils';
-
 const moveMap: Record<
   PieceType,
   (piece: Piece, pos: Position, board: Board) => Move[]
@@ -32,5 +30,5 @@ export function getAttacks(
 
   if(!piece) return [];
   const generator = moveMap[piece.type];
-  return uniqueMoves(generator(piece, pos, board));
+  return generator(piece, pos, board);
 }

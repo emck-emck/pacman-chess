@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AsyncPipe, TitleCasePipe } from '@angular/common';
+import { AsyncPipe, TitleCasePipe, CommonModule } from '@angular/common';
 
 import { Position } from '../../models/position';
 
@@ -10,16 +10,18 @@ import { GameStateService } from '../../service/gamestateservice';
   selector: 'board',
   templateUrl: './board.html',
   styleUrl: './board.css',
-  imports: [AsyncPipe, TitleCasePipe, SquareComponent],
+  imports: [AsyncPipe, CommonModule, TitleCasePipe, SquareComponent],
 })
 export class BoardComponent {
   board$ = this.gameState.board$;
   selectedPiece$ = this.gameState.selected$;
   legalMoves$ = this.gameState.legalMoves$;
   turn$ = this.gameState.turn$;
+  check$ = this.gameState.check$;
 
   legalMoveSet = new Set<string>();
   selected: string = '';
+  checkFlag: boolean = false;
 
   constructor(private gameState: GameStateService) {}
 
@@ -35,6 +37,9 @@ export class BoardComponent {
     });
     this.gameState.selected$.subscribe(sel => {
       sel? this.selected = `${sel.row},${sel.col}`: this.selected = ''
+    });
+    this.gameState.check$.subscribe(c => {
+      this.checkFlag = c;
     });
   }
 
