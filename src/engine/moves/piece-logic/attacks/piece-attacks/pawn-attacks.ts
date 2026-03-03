@@ -3,8 +3,6 @@ import { Position } from '../../../../../models/position';
 import { Board } from '../../../../../models/board';
 import { Move } from '../../../../../models/move';
 
-import { BOARDSIZE } from '../../../../constants';
-
 import { generateCaptureMove } from '../../../moves-utils/moves-factory';
 import { moveColLeft, moveColRight } from '../../../moves-utils/moves-utils';
 
@@ -16,7 +14,6 @@ export function getPawnAttacks(
   board: Board
 ): Move[] {
   const up: number = piece.colour == 'white'? -1: 1;
-  const promoRank: number = piece.colour === 'white'? 0: (BOARDSIZE-1);
   const captureLeft: Position = {row: pos.row + up, col: moveColLeft(pos.col, 1)};
   const captureRight: Position = {row: pos.row + up, col: moveColRight(pos.col, 1)};
 

@@ -16,12 +16,14 @@ export class PChessEngine {
 
   isInCheck: boolean;
   isGameOver: boolean;
+  isPromoting: boolean;
 
   constructor() {
     this._board = initBoard();
     this._currentMoves = [];
     this.isInCheck = false;
     this.isGameOver = false;
+    this.isPromoting = false;
     this.enPassantTarget = null;
   }
 
@@ -152,11 +154,19 @@ export class PChessEngine {
           }
           break;
         case 'promotion':
+          this._board[move.from.row][move.from.col] = null;
+          this._board[move.to.row][move.to.col] = piece;
+
           break;
       }
       piece.hasMoved = true;
       this.handleTurnEnd();
     }
+  }
+
+  promotePiece(pos: Position, piece: Piece){
+    this._board[pos.row][pos.col] = piece;
+    this.handleTurnEnd();
   }
 
   swapTurn(){

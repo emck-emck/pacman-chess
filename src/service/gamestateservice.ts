@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+
 import { PChessEngine } from '../engine/pchessengine';
+
+import { Piece } from '../models/piece';
 import { Position } from '../models/position';
 import { Board } from '../models/board';
 
@@ -23,22 +26,31 @@ export class GameStateService {
   turn$ = this.turnSubject.asObservable();
   message$ = this.messageSubject.asObservable();
 
+  handlePieceSelection(pos: Position){
+    // Update what was clicked on and determine legal moves
+    this.selectedInternal = pos;
+    this.legalMovesInternal = this.engine.getLegalMoves(pos);
+
+    // Tell the game board about the update
+    this.selectedSubject.next(pos);
+    this.legalMovesSubject.next(this.legalMovesInternal);
+  }
+
+  handlePromoClick(){
+
+  }
+
   handleSquareClick(pos: Position) {
-    const piece = this.engine.getPieceAt(pos);
+    const piece: (Piece | null) = this.engine.getPieceAt(pos);
 
-    // First click
-    if (!this.selectedInternal) {
-      if (piece && piece.colour === this.engine.currentTurn) { // Bail if clicked on an empty square or an enemy piece
-        // Update what was clicked on and determine legal moves
-        this.selectedInternal = pos;
-        this.legalMovesInternal = this.engine.getLegalMoves(pos);
-
-        // Tell the game board about the update
-        this.selectedSubject.next(pos);
-        this.legalMovesSubject.next(this.legalMovesInternal);
-      }
+    // First click or new piece selection
+    if (piece && piece.colour === this.engine.currentTurn) { // Bail if clicked on an empty square or an enemy piece
+      this.handlePieceSelection(pos);
       return;
-    } 
+    }
+    
+    // Don't allow accidental clicks
+    if(!this.selectedInternal) return;
 
     // Second click
     // Map all legal moves to a lookup set

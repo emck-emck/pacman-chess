@@ -38,3 +38,12 @@ export function generateCastlingMove(from: Position, to: Position, rFrom: Positi
         }
     }
 }
+
+export function generatePromotionMove(from: Position, to: Position, capture?: Position): Move{
+    return {
+        from: from,
+        to: to,
+        capture: capture,
+        type: 'promotion'
+    };
+}
