@@ -89,7 +89,7 @@ export class GameStateService {
 
   updateGameMessage(){
     let msg: string;
-    if(this.engine.isGameOver){
+    if(this.engine.gameOver){
       msg = `Game over, ${this.engine.currentTurn} wins!`;
     }else if(this.engine.isInCheck){
       msg = `${this.engine.currentTurn} to move, is in check`;

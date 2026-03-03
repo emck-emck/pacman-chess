@@ -9,21 +9,20 @@ import { checkSquare, positionKey } from './utils/engine-utils';
 import { findKing, isInCheck } from './moves/moves-utils/moves-utils';
 
 export class PChessEngine {
-  private sideToMove: 'white' | 'black' = 'white';
+  
   private _board: Board;
   private _currentMoves: Move[];
+  
   private enPassantTarget: (Position | null);
-
-  isInCheck: boolean;
-  isGameOver: boolean;
-  isPromoting: boolean;
+  private checkState: boolean;
+  private isGameOver: boolean;
+  private sideToMove: 'white' | 'black' = 'white';
 
   constructor() {
     this._board = initBoard();
     this._currentMoves = [];
-    this.isInCheck = false;
+    this.checkState = false;
     this.isGameOver = false;
-    this.isPromoting = false;
     this.enPassantTarget = null;
   }
 
@@ -31,9 +30,18 @@ export class PChessEngine {
     return this._board;
   }
 
+  get isInCheck(): boolean {
+    return this.checkState;
+  }
+
   get currentTurn(): 'white' | 'black' {
     return this.sideToMove;
   }
+
+  get gameOver(): boolean{
+    return this.isGameOver;
+  }
+  
 
   getBoardClone(){
     return structuredClone(this._board);
@@ -75,11 +83,11 @@ export class PChessEngine {
       if(isEndGame){
         this.isGameOver = true;
       }else{
-        this.isInCheck = true;
+        this.checkState = true;
         this.swapTurn();
       }
     }else{
-      this.isInCheck = false;
+      this.checkState = false;
       this.swapTurn();
     }
   }
