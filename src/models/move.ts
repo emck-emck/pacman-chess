@@ -5,4 +5,8 @@ export interface Move {
     from: Position;
     to: Position;
     capture?: Position;
+    secondaryMoves?: {
+        from: Position;
+        to: Position;
+    };
 };

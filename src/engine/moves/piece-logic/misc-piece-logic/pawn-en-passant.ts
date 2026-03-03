@@ -2,7 +2,7 @@ import { Piece } from '../../../../models/piece';
 import { Position } from '../../../../models/position';
 import { Move } from '../../../../models/move';
 
-import { generateCaptureMove } from '../../moves-utils/moves-factory';
+import { generateEnPassantMove } from '../../moves-utils/moves-factory';
 import { moveColLeft, moveColRight } from '../../moves-utils/moves-utils';
 
 export function getPawnEnPassant(
@@ -22,12 +22,12 @@ export function getPawnEnPassant(
   if(enPassantTarget.row === enPassantRow){
     // Check left
     if(enPassantTarget.col === captureLeft.col){
-      ret.push(generateCaptureMove(pos, enPassantTarget, captureLeft));
+      ret.push(generateEnPassantMove(pos, enPassantTarget, captureLeft));
     }
 
     // Check right
     if(enPassantTarget.col === captureRight.col){
-      ret.push(generateCaptureMove(pos, enPassantTarget, captureRight));
+      ret.push(generateEnPassantMove(pos, enPassantTarget, captureRight));
     }
   }
 

@@ -27,10 +27,14 @@ export function generateEnPassantMove(from: Position, to: Position, capture: Pos
     }
 }
 
-export function generateCastlingMove(from: Position, to: Position): Move{
+export function generateCastlingMove(from: Position, to: Position, rFrom: Position, rTo:Position): Move{
     return {
         from: from,
         to: to,
-        type: 'castle'
+        type: 'castle',
+        secondaryMoves: {
+            from:rFrom,
+            to: rTo
+        }
     }
 }
