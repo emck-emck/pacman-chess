@@ -10,16 +10,20 @@ import { findKing, isInCheck } from './moves/moves-utils/moves-utils';
 
 export class PChessEngine {
   private sideToMove: 'white' | 'black' = 'white';
+  private _board: Board;
+  private _currentMoves: Move[];
+  private enPassantTarget: (Position | null);
 
-  _board: Board;
-  _currentMoves: Move[];
   isInCheck: boolean;
-  enPassantTarget: (Position | null);
+  isGameOver: boolean;
+  isPromoting: boolean;
 
   constructor() {
     this._board = initBoard();
     this._currentMoves = [];
     this.isInCheck = false;
+    this.isGameOver = false;
+    this.isPromoting = false;
     this.enPassantTarget = null;
   }
 
@@ -35,13 +39,12 @@ export class PChessEngine {
     return structuredClone(this._board);
   }
 
-  getCheckState(){
-    const kingPos = findKing(this.sideToMove, this._board);
+  getCheckState(colour: Colour): boolean{
+    const kingPos = findKing(colour, this._board);
     if(!kingPos) {
-      this.isInCheck = false; // Throw error
-      return;
+      return false; // Throw error
     }
-    this.isInCheck =  isInCheck(this.sideToMove, kingPos, this._board);
+    return isInCheck(colour, kingPos, this._board);
   }
 
   getLegalMoves(pos: Position): Position[]{
@@ -64,6 +67,42 @@ export class PChessEngine {
     return positionKey(pos);
   }  
 
+  handleTurnEnd() {
+    const opponent: Colour = this.currentTurn === 'white'? 'black': 'white';
+    const isOpponentInCheck: boolean = this.getCheckState(opponent);
+    if(isOpponentInCheck){
+      const isEndGame: boolean = this.isEndGame(opponent);
+      if(isEndGame){
+        this.isGameOver = true;
+      }else{
+        this.isInCheck = true;
+        this.swapTurn();
+      }
+    }else{
+      this.isInCheck = false;
+      this.swapTurn();
+    }
+  }
+
+  // Returns true if the given colour has no possible moves left
+  isEndGame(colour: Colour){
+    let allMoves: Position[] = [];
+    let boardClone: Board;
+    for(let row = 0; row < this._board.length; row++){
+      for(let col = 0; col < this._board[row].length; col++){
+        const piece = this._board[row][col];
+        if(piece && piece.colour === colour){
+          const pos = {row: row, col: col}
+          const moves: Position[] = this.getLegalMoves(pos);
+          for(const m of moves){
+            allMoves.push(m);
+          }
+        }
+      }
+    }
+    return allMoves.length === 0;
+  }
+
   move(from: Position, to: Position) {
     const piece: (Piece | null) = this._board[from.row][from.col];
     let move: (Move | null) = null;
@@ -80,45 +119,57 @@ export class PChessEngine {
       if(move.capture){
         this._board[move.capture.row][move.capture.col] = null;
       }
+
+      // En passant tracking
+      if(piece.type === 'pawn'){
+        const pMove = move.from.row - move.to.row;
+        if(pMove === 2){
+          this.enPassantTarget = {row: move.to.row + 1, col: move.to.col};
+        }else if(pMove === -2){
+          this.enPassantTarget = {row: move.to.row - 1, col: move.to.col};
+        }else{
+          this.enPassantTarget = null;
+        }
+      }else{
+        this.enPassantTarget = null;
+      }
+      
       // MOVE LOGIC
       switch(move.type){
         case 'normal':
-          this._board[from.row][from.col] = null;
-          this._board[to.row][to.col] = piece;
-
-          // En passant tracking
-          if(piece.type === 'pawn'){
-            const pMove = from.row - to.row;
-            if(pMove === 2){
-              this.enPassantTarget = {row: to.row + 1, col: to.col};
-            }else if(pMove === -2){
-              this.enPassantTarget = {row: to.row - 1, col: to.col};
-            }else{
-              this.enPassantTarget = null;
-            }
-          }else{
-            this.enPassantTarget = null;
-          }
-          break;
         case 'capture':
-          this._board[from.row][from.col] = null;
-          this._board[to.row][to.col] = piece;
-          break;
         case 'en-passant':
-          this._board[from.row][from.col] = null;
-          this._board[to.row][to.col] = piece;
+          this._board[move.from.row][move.from.col] = null;
+          this._board[move.to.row][move.to.col] = piece;
           break;
         case 'castle':
+          // Move king
+          this._board[move.from.row][move.from.col] = null;
+          this._board[move.to.row][move.to.col] = piece;
+          //Move rook
+          if(move.secondaryMoves){
+            const rook: (Piece | null) = this._board[move.secondaryMoves.from.row][move.secondaryMoves.from.col]
+            this._board[move.secondaryMoves.from.row][move.secondaryMoves.from.col] = null;
+            this._board[move.secondaryMoves.to.row][move.secondaryMoves.to.col] = rook;
+          }
           break;
         case 'promotion':
+          this._board[move.from.row][move.from.col] = null;
+          this._board[move.to.row][move.to.col] = piece;
+
           break;
       }
       piece.hasMoved = true;
-      this.swapTurn();
+      this.handleTurnEnd();
     }
   }
 
-  swapTurn() {
+  promotePiece(pos: Position, piece: Piece){
+    this._board[pos.row][pos.col] = piece;
+    this.handleTurnEnd();
+  }
+
+  swapTurn(){
     this.sideToMove = this.sideToMove === 'white' ? 'black' : 'white';
   }
 }

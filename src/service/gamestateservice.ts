@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+
 import { PChessEngine } from '../engine/pchessengine';
+
+import { Piece } from '../models/piece';
 import { Position } from '../models/position';
 import { Board } from '../models/board';
 
@@ -15,30 +18,39 @@ export class GameStateService {
   private selectedSubject = new BehaviorSubject<Position | null>(null);
   private legalMovesSubject = new BehaviorSubject<Position[]>([]);
   private turnSubject = new BehaviorSubject<'white' | 'black'>(this.engine.currentTurn);
-  private checkSubject = new BehaviorSubject<boolean>(this.engine.isInCheck);
+  private messageSubject = new BehaviorSubject<string>('white to move');
 
   board$ = this.boardSubject.asObservable();
   selected$ = this.selectedSubject.asObservable();
   legalMoves$ = this.legalMovesSubject.asObservable();
   turn$ = this.turnSubject.asObservable();
-  check$ = this.checkSubject.asObservable();
+  message$ = this.messageSubject.asObservable();
+
+  handlePieceSelection(pos: Position){
+    // Update what was clicked on and determine legal moves
+    this.selectedInternal = pos;
+    this.legalMovesInternal = this.engine.getLegalMoves(pos);
+
+    // Tell the game board about the update
+    this.selectedSubject.next(pos);
+    this.legalMovesSubject.next(this.legalMovesInternal);
+  }
+
+  handlePromoClick(){
+
+  }
 
   handleSquareClick(pos: Position) {
-    const piece = this.engine.getPieceAt(pos);
+    const piece: (Piece | null) = this.engine.getPieceAt(pos);
 
-    // First click
-    if (!this.selectedInternal) {
-      if (piece && piece.colour === this.engine.currentTurn) { // Bail if clicked on an empty square or an enemy piece
-        // Update what was clicked on and determine legal moves
-        this.selectedInternal = pos;
-        this.legalMovesInternal = this.engine.getLegalMoves(pos);
-
-        // Tell the game board about the update
-        this.selectedSubject.next(pos);
-        this.legalMovesSubject.next(this.legalMovesInternal);
-      }
+    // First click or new piece selection
+    if (piece && piece.colour === this.engine.currentTurn) { // Bail if clicked on an empty square or an enemy piece
+      this.handlePieceSelection(pos);
       return;
-    } 
+    }
+    
+    // Don't allow accidental clicks
+    if(!this.selectedInternal) return;
 
     // Second click
     // Map all legal moves to a lookup set
@@ -49,12 +61,13 @@ export class GameStateService {
 
       // CORE LOGIC HERE
       this.engine.move(this.selectedInternal, pos);
-      this.engine.getCheckState();
 
       // Tell the game board about the upate
       this.boardSubject.next(this.engine.board);
       this.turnSubject.next(this.engine.currentTurn);
-      this.checkSubject.next(this.engine.isInCheck);
+      
+      // Update game board mesage based on state
+      this.updateGameMessage();
     }
 
     // Reset selection if second click or misclick
@@ -62,5 +75,17 @@ export class GameStateService {
     this.legalMovesInternal = [];
     this.selectedSubject.next(null);
     this.legalMovesSubject.next([]);
+  }
+
+  updateGameMessage(){
+    let msg: string;
+    if(this.engine.isGameOver){
+      msg = `Game over, ${this.engine.currentTurn} wins!`;
+    }else if(this.engine.isInCheck){
+      msg = `${this.engine.currentTurn} to move, is in check`;
+    }else{
+      msg = `${this.engine.currentTurn} to move`;
+    }
+    this.messageSubject.next(msg);
   }
 }

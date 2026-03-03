@@ -23,9 +23,7 @@ const logicMap: Record<
 
 /*===============
   TO IMPLEMENT:
-  EN PASSANT
   PAWN PROMOTION
-  CASTLING
   ===============*/
 
 export function checkLegalMoves(
