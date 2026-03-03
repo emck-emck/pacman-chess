@@ -27,6 +27,15 @@ export class GameStateService {
   message$ = this.messageSubject.asObservable();
 
   handlePieceSelection(pos: Position){
+    // Clicking on the same piece deselects it
+    if(this.selectedInternal && this.engine.getPositionKey(this.selectedInternal) === this.engine.getPositionKey(pos)) {
+      this.selectedInternal = null;
+      this.legalMovesInternal = [];
+      this.selectedSubject.next(null);
+      this.legalMovesSubject.next([]);
+      return;
+    }
+
     // Update what was clicked on and determine legal moves
     this.selectedInternal = pos;
     this.legalMovesInternal = this.engine.getLegalMoves(pos);
@@ -44,13 +53,14 @@ export class GameStateService {
     const piece: (Piece | null) = this.engine.getPieceAt(pos);
 
     // First click or new piece selection
-    if (piece && piece.colour === this.engine.currentTurn) { // Bail if clicked on an empty square or an enemy piece
+    if (piece && piece.colour === this.engine.currentTurn) { // Select only if clicking on a valid piece
       this.handlePieceSelection(pos);
       return;
     }
     
     // Don't allow accidental clicks
     if(!this.selectedInternal) return;
+
 
     // Second click
     // Map all legal moves to a lookup set
@@ -70,7 +80,7 @@ export class GameStateService {
       this.updateGameMessage();
     }
 
-    // Reset selection if second click or misclick
+    // Reset selection if second click
     this.selectedInternal = null;
     this.legalMovesInternal = [];
     this.selectedSubject.next(null);
