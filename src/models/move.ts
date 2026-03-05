@@ -1,7 +1,15 @@
+import { PieceType } from "./piece";
 import { Position } from "./position";
 
+type MoveType = 
+    | 'normal' 
+    | 'capture' 
+    | 'en-passant' 
+    | 'castle' 
+    | 'promotion';
+
 export interface Move {
-    type: 'normal' | 'capture' | 'en-passant' | 'castle' | 'promotion';
+    type: MoveType;
     from: Position;
     to: Position;
     capture?: Position;
@@ -9,4 +17,5 @@ export interface Move {
         from: Position;
         to: Position;
     };
+    promotion?: PieceType
 };

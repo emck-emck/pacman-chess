@@ -6,13 +6,14 @@ import { PChessEngine } from '../engine/pchessengine';
 import { Piece } from '../models/piece';
 import { Position } from '../models/position';
 import { Board } from '../models/board';
+import { Move } from '../models/move';
 
 @Injectable({ providedIn: 'root' })
 export class GameStateService {
   private engine = new PChessEngine();
 
   private selectedInternal: Position | null = null;
-  private legalMovesInternal: Position[] = [];
+  private legalMovesInternal: Move[] = [];
 
   private boardSubject = new BehaviorSubject<Board>(this.engine.board);
   private selectedSubject = new BehaviorSubject<Position | null>(null);
