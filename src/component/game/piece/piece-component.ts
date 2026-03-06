@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Piece } from '../../models/piece';
+import { Piece } from '../../../models/piece';
 
 @Component({
   selector: 'piece',

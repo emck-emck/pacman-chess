@@ -42,5 +42,7 @@
 
 piece {
   position: relative;
+  pointer-events: none;
+  user-select: none;
   z-index: 1;
 }

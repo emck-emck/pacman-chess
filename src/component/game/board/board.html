@@ -1,4 +1,4 @@
-<h3>{{(turn$ | async) | titlecase}} to move</h3>
+<h3>{{message}}</h3>
 <table>
   @for (row of board$ | async; track $index; let rowIndex = $index){
   <tr>

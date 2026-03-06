@@ -1,24 +1,25 @@
 import { Component } from '@angular/core';
-import { AsyncPipe, TitleCasePipe } from '@angular/common';
+import { AsyncPipe, CommonModule } from '@angular/common';
 
-import { Position } from '../../models/position';
+import { Position } from '../../../models/position';
 
 import { SquareComponent } from '../square/square-component';
-import { GameStateService } from '../../service/gamestateservice';
+import { GameStateService } from '../../../service/gamestateservice';
 
 @Component({
   selector: 'board',
   templateUrl: './board.html',
   styleUrl: './board.css',
-  imports: [AsyncPipe, TitleCasePipe, SquareComponent],
+  imports: [AsyncPipe, CommonModule, SquareComponent],
 })
 export class BoardComponent {
   board$ = this.gameState.board$;
   selectedPiece$ = this.gameState.selected$;
   legalMoves$ = this.gameState.legalMoves$;
-  turn$ = this.gameState.turn$;
+  msg$ = this.gameState.message$;
 
   legalMoveSet = new Set<string>();
+  message: string = '';
   selected: string = '';
 
   constructor(private gameState: GameStateService) {}
@@ -36,14 +37,17 @@ export class BoardComponent {
     this.gameState.selected$.subscribe(sel => {
       sel? this.selected = `${sel.row},${sel.col}`: this.selected = ''
     });
-  }
-
-  isLight(row: number, col: number): boolean {
-    return (((row + col)%2) == 0);
+    this.gameState.message$.subscribe(m => {
+      this.message = m;
+    });
   }
 
   isLegal(row: number, col: number): boolean {
     return this.legalMoveSet.has(`${row},${col}`);
+  }
+
+  isLight(row: number, col: number): boolean {
+    return (((row + col)%2) == 0);
   }
 
   isSelected(row: number, col: number): boolean{
