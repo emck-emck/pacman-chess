@@ -1,4 +1,4 @@
-import { Piece } from '../../../models/piece';
+import { Piece, PieceType } from '../../../models/piece';
 import { Position } from '../../../models/position';
 import { Board } from '../../../models/board';
 import { Move } from '../../../models/move';
@@ -45,8 +45,11 @@ export function pawnLogic(
   // Identifes moves as promotions
   for(const m of moves){
     if(m.to.row === promoRank){
-      const promoMove: Move = generatePromotionMove(m.from, m.to, m.capture);
-      ret.push(promoMove);
+      const promoPieces: PieceType[] = ['queen', 'rook', 'bishop', 'knight'];
+      for(const p of promoPieces){
+        const promoMove: Move = generatePromotionMove(m.from, m.to, p, m.capture);
+        ret.push(promoMove);
+      }
     }else{
       ret.push(m);
     }

@@ -1,0 +1,18 @@
+<div *ngIf="isPromoting$ | async">
+    <div (click)="handlePromotion({type: 'queen', colour: promoColour, hasMoved: true})">
+        <span *ngIf="promoColour === 'white'">♕</span>
+        <span *ngIf="!(promoColour === 'white')")>♛</span>
+    </div>
+    <div (click)="handlePromotion({type: 'rook', colour: promoColour, hasMoved: true})">
+        <span *ngIf="promoColour === 'white'">♖</span>
+        <span *ngIf="!(promoColour === 'white')")>♜</span>
+    </div>
+    <div (click)="handlePromotion({type: 'bishop', colour: promoColour, hasMoved: true})">
+        <span *ngIf="promoColour === 'white'">♗</span>
+        <span *ngIf="!(promoColour === 'white')")>♝</span>
+    </div>
+    <div (click)="handlePromotion({type: 'knight', colour: promoColour, hasMoved: true})">
+        <span *ngIf="promoColour === 'white'">♘</span>
+        <span *ngIf="!(promoColour === 'white')")>♞</span>
+    </div>
+</div>

@@ -36,7 +36,7 @@ export function checkLegalMoves(
   if(!piece) return [];
 
   // OVERRIDES LOGICMAP
-  if(piece.type === 'pawn') return uniqueMoves(pawnLogic(piece, pos, enPassantTarget, board));
+  if(piece.type === 'pawn') return pawnLogic(piece, pos, enPassantTarget, board);
 
   const generator = logicMap[piece.type];
   return uniqueMoves(generator(piece, pos, board));

@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 import { AsyncPipe, CommonModule } from '@angular/common';
 
-import { Position } from '../../models/position';
+import { Position } from '../../../models/position';
 
 import { SquareComponent } from '../square/square-component';
-import { GameStateService } from '../../service/gamestateservice';
+import { GameStateService } from '../../../service/gamestateservice';
 
 @Component({
   selector: 'board',
@@ -16,11 +16,10 @@ export class BoardComponent {
   board$ = this.gameState.board$;
   selectedPiece$ = this.gameState.selected$;
   legalMoves$ = this.gameState.legalMoves$;
-  turn$ = this.gameState.turn$;
   msg$ = this.gameState.message$;
 
   legalMoveSet = new Set<string>();
-  message: string = 'White to move';
+  message: string = '';
   selected: string = '';
 
   constructor(private gameState: GameStateService) {}
