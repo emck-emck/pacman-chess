@@ -1,5 +1,6 @@
 import { Move } from "../../../models/move";
 import { Position } from "../../../models/position";
+import { PieceType } from "../../../models/piece";
 
 export function generateNormalMove(from: Position, to: Position): Move{
     return {
@@ -39,11 +40,12 @@ export function generateCastlingMove(from: Position, to: Position, rFrom: Positi
     }
 }
 
-export function generatePromotionMove(from: Position, to: Position, capture?: Position): Move{
+export function generatePromotionMove(from: Position, to: Position, promoPiece: PieceType, capture?: Position): Move{
     return {
         from: from,
         to: to,
         capture: capture,
-        type: 'promotion'
+        type: 'promotion',
+        promotion: promoPiece
     };
 }

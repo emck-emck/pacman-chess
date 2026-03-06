@@ -8,6 +8,14 @@ import { BOARDSIZE } from '../../../constants';
 import { generateCastlingMove } from '../../moves-utils/moves-factory';
 import { isInCheck } from '../../moves-utils/moves-utils';
 
+function compareColumns(col1: number, col2: number, direction: number, extraParam: number = 0): boolean{
+    if (direction > 0){
+        return col1 < col2 + extraParam;
+    }else{
+        return col1 > col2 - extraParam;
+    }
+}
+
 export function getCastlingMoves(king: Piece, pos: Position, board: Board): Move[]{
   const colour: Colour = king.colour
   const backRank: number = colour === 'white'? (BOARDSIZE - 1): 0;
@@ -27,58 +35,36 @@ export function getCastlingMoves(king: Piece, pos: Position, board: Board): Move
     const direction: number = (pos.col > r.col)? -1: 1; 
 
     //Check squares between rook and king are empty
-    //Check king does not travel through check
     let clear: boolean = true;
-    if(direction > 0){ // RIGHT ROOK
-        for(let col = pos.col + direction; col < r.col; col = col + direction){ // Empty cheeck
-            if(board[backRank][col]){
-                clear = false;
-                break;
-            }
-        }
-        if(!clear) continue;
-
-        for(let col = pos.col + direction; col < (pos.col + direction + 2); col++){// Check check
-            const kingSimMove: Position = {row: backRank, col: col};
-            if(isInCheck(colour, kingSimMove, board)){
-                clear = false;
-                break;
-            }
-        } 
-        //Pass castle move to return array
-        if(clear){
-            const from: Position = {row: pos.row, col: pos.col};
-            const to: Position = {row: pos.row, col: (pos.col + (direction*2))};
-            const rFrom: Position = r;
-            const rTo: Position = {row: r.row, col: (pos.col + direction)};
-            ret.push(generateCastlingMove(from, to, rFrom, rTo));
-        }
-    }else{ // LEFT ROOK
-        for(let col = pos.col + direction; col > r.col; col = col + direction){ // Empty check
-            if(board[backRank][col]){
-                clear = false;
-                break;
-            }
-        }
-        if(!clear) continue;
-
-        for(let col = pos.col + direction; col > (pos.col + direction - 2); col--){// Check check
-            const kingSimMove: Position = {row: backRank, col: col};
-            if(isInCheck(colour, kingSimMove, board)){
-                clear = false;
-                break;
-            }
-        } 
-        //Pass castle move to return array
-        if(clear){
-            const from: Position = {row: pos.row, col: pos.col};
-            const to: Position = {row: pos.row, col: (pos.col + (direction*2))};
-            const rFrom: Position = r;
-            const rTo: Position = {row: r.row, col: (pos.col + direction)};
-            ret.push(generateCastlingMove(from, to, rFrom, rTo));
+    console.log('Checking squares are empty');
+    for(let col = pos.col + direction; compareColumns(col, r.col, direction); col = col + direction){ 
+        if(board[backRank][col]){
+            clear = false;
+            break;
         }
     }
-}
+    if(!clear) continue;
+
+    console.log("Checking king does not travel through check");
+    //Check king does not travel through check
+    for(let col = pos.col + direction; compareColumns(col, pos.col, direction, 2); col = col + direction){
+        const kingSimMove: Position = {row: backRank, col: col};
+        if(isInCheck(colour, kingSimMove, board)){
+            clear = false;
+            break;
+        }
+    } 
+    //Pass castle move to return array
+    if(clear){
+        const from: Position = {row: pos.row, col: pos.col};
+        const to: Position = {row: pos.row, col: (pos.col + (direction*2))};
+        const rFrom: Position = r;
+        const rTo: Position = {row: r.row, col: (pos.col + direction)};
+        ret.push(generateCastlingMove(from, to, rFrom, rTo));
+        console.log('Adding castling move');
+    }
+    
+  }
 
   return ret;
 }

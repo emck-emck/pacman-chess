@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { Piece } from '../../models/piece';
-import { Position } from '../../models/position';
+import { Piece } from '../../../models/piece';
+import { Position } from '../../../models/position';
 
 import { PieceComponent } from '../piece/piece-component';
 
