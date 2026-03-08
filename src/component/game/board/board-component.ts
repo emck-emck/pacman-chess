@@ -5,12 +5,13 @@ import { Position } from '../../../models/position';
 
 import { SquareComponent } from '../square/square-component';
 import { GameStateService } from '../../../service/gamestateservice';
+import { PromotionComponent } from '../promotion/promotion-component';
 
 @Component({
   selector: 'board',
   templateUrl: './board.html',
   styleUrl: './board.css',
-  imports: [AsyncPipe, CommonModule, SquareComponent],
+  imports: [AsyncPipe, CommonModule, SquareComponent, PromotionComponent],
 })
 export class BoardComponent {
   board$ = this.gameState.board$;

@@ -1,3 +1,12 @@
+.promotion-box {
+  background-color: white;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 span {
   user-select: none;
   font-size: 32px;
