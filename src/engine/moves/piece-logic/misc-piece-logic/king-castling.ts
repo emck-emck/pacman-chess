@@ -7,7 +7,9 @@ import { BOARDSIZE } from '../../../constants';
 
 import { generateCastlingMove } from '../../moves-utils/moves-factory';
 import { isInCheck } from '../../moves-utils/moves-utils';
+import { ChessEngine } from '../../../chess-engine';
 
+// Helps with checking the squares between the king and the rook
 function compareColumns(col1: number, col2: number, direction: number, extraParam: number = 0): boolean{
     if (direction > 0){
         return col1 < col2 + extraParam;
@@ -16,7 +18,7 @@ function compareColumns(col1: number, col2: number, direction: number, extraPara
     }
 }
 
-export function getCastlingMoves(king: Piece, pos: Position, board: Board): Move[]{
+export function getCastlingMoves(engine: ChessEngine, king: Piece, pos: Position, board: Board): Move[]{
   const colour: Colour = king.colour
   const backRank: number = colour === 'white'? (BOARDSIZE - 1): 0;
   let ret: Move[] = [];
@@ -25,7 +27,7 @@ export function getCastlingMoves(king: Piece, pos: Position, board: Board): Move
   if(king.hasMoved) return ret;
 
   //Return empty array if king is in check
-  if(isInCheck(colour, pos, board)) return ret;
+  if(isInCheck(engine, colour, pos, board)) return ret;
   
   //Find rooks
   const rooks: Position[] = findRooks(board, colour, backRank);
@@ -36,7 +38,6 @@ export function getCastlingMoves(king: Piece, pos: Position, board: Board): Move
 
     //Check squares between rook and king are empty
     let clear: boolean = true;
-    console.log('Checking squares are empty');
     for(let col = pos.col + direction; compareColumns(col, r.col, direction); col = col + direction){ 
         if(board[backRank][col]){
             clear = false;
@@ -45,11 +46,10 @@ export function getCastlingMoves(king: Piece, pos: Position, board: Board): Move
     }
     if(!clear) continue;
 
-    console.log("Checking king does not travel through check");
     //Check king does not travel through check
     for(let col = pos.col + direction; compareColumns(col, pos.col, direction, 2); col = col + direction){
         const kingSimMove: Position = {row: backRank, col: col};
-        if(isInCheck(colour, kingSimMove, board)){
+        if(isInCheck(engine, colour, kingSimMove, board)){
             clear = false;
             break;
         }
@@ -61,7 +61,6 @@ export function getCastlingMoves(king: Piece, pos: Position, board: Board): Move
         const rFrom: Position = r;
         const rTo: Position = {row: r.row, col: (pos.col + direction)};
         ret.push(generateCastlingMove(from, to, rFrom, rTo));
-        console.log('Adding castling move');
     }
     
   }

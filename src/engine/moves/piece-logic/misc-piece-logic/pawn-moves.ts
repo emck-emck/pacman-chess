@@ -4,9 +4,10 @@ import { Board } from '../../../../models/board';
 import { Move } from '../../../../models/move';
 
 import { generateNormalMove } from '../../moves-utils/moves-factory';
-import { checkSquare } from '../../../utils/engine-utils';
+import { ChessEngine } from '../../../chess-engine';
 
 export function getPawnMoves(
+  engine: ChessEngine,
   piece: Piece,
   pos: Position,
   board: Board
@@ -19,7 +20,7 @@ export function getPawnMoves(
   let occPiece: Piece | null = null;
 
   // Check in front of piece
-  occPiece = checkSquare(moveUpOne, board);
+  occPiece = engine.checkSquare(moveUpOne, board);
   if (!occPiece) {
     ret.push(generateNormalMove(pos, moveUpOne));
   }
@@ -27,7 +28,7 @@ export function getPawnMoves(
     //If first move for pawn and nobody is on the square in front
   if (!piece.hasMoved && !occPiece) {
     // Check two squares in front of piece
-    occPiece = checkSquare(moveUpTwo, board);
+    occPiece = engine.checkSquare(moveUpTwo, board);
     if (!occPiece) {
       ret.push(generateNormalMove(pos, moveUpTwo));
     }

@@ -2,13 +2,13 @@ import { Piece } from '../../../../../../models/piece';
 import { Position } from '../../../../../../models/position';
 import { Board } from '../../../../../../models/board';
 import { Move } from '../../../../../../models/move';
-import { BOARDSIZE } from '../../../../../constants';
 
 import { generateNormalMove, generateCaptureMove } from '../../../../moves-utils/moves-factory';
 
-import { checkSquare } from '../../../../../utils/engine-utils';
+import { ChessEngine } from '../../../../../chess-engine';
 
 export function getKNAttacks(
+  engine: ChessEngine,
   piece: Piece,
   pos: Position,
   board: Board,
@@ -20,10 +20,10 @@ export function getKNAttacks(
 
   for(const to of moves){
     //Check bounds
-    if((to.row > (BOARDSIZE-1)) || to.row < 0) continue;
+    if(!engine.isInBounds(to, board)) continue;
 
     //Check piece in way
-    occPiece = checkSquare(to, board);
+    occPiece = engine.checkSquare(to, board);
     //If no piece in way
     if(!occPiece ){
       ret.push(generateNormalMove(pos, to));

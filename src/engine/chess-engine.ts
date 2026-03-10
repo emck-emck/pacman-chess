@@ -5,10 +5,10 @@ import { Move } from '../models/move';
 
 import { checkLegalMoves } from './moves/moves';
 import { initBoard } from './board/board-factory';
-import { checkSquare, positionKey } from './utils/engine-utils';
+import { positionKey } from './utils/engine-utils';
 import { findKing, isInCheck } from './moves/moves-utils/moves-utils';
 
-export class PChessEngine {
+export class ChessEngine {
   
   private _board: Board;
   private _currentMoves: Move[];
@@ -54,7 +54,13 @@ export class PChessEngine {
   
   get isInCheck(): boolean {
     return this.checkState;
-  } 
+  }
+
+  checkSquare(pos: Position, board: Board): (Piece | null){
+    if(!this.isInBounds(pos, board)) return null;
+    
+      return board[pos.row][pos.col];
+  }
 
   getBoardClone(){
     return structuredClone(this._board);
@@ -65,29 +71,15 @@ export class PChessEngine {
     if(!kingPos) {
       return false; // Throw error
     }
-    return isInCheck(colour, kingPos, this._board);
+    return isInCheck(this, colour, kingPos, this._board);
   }
 
   getLegalMoves(pos: Position){
-    this._currentMoves = checkLegalMoves(this._board[pos.row][pos.col], pos, this.enPassantTarget, this.getBoardClone());
+    this._currentMoves = checkLegalMoves(this, this._board[pos.row][pos.col], pos, this.enPassantTarget, this.getBoardClone());
   }
-
-  /*
-  getLegalMoves(pos: Position): Position[]{
-    let legalMoves: Position[] = [];
-
-    this._currentMoves = checkLegalMoves(this._board[pos.row][pos.col], pos, this.enPassantTarget, this.getBoardClone());
-
-    for(const m of this._currentMoves){
-      legalMoves.push(m.to);
-    }
-
-    return legalMoves;
-  }
-    */
 
   getPieceAt(pos: Position): (Piece | null){
-    return checkSquare(pos, this._board);
+    return this.checkSquare(pos, this.board)
   }
 
   getMoveKey(move: Move): string{
@@ -131,6 +123,10 @@ export class PChessEngine {
       }
     }
     return allMoves.length === 0;
+  }
+
+  isInBounds(pos: Position, board: Board): boolean {
+    return pos.row >= 0 && pos.row < board.length && pos.col >= 0 && pos.col < board[0].length;
   }
 
   // Returns true if there is more than one move to a position with the same coordinates
@@ -202,6 +198,14 @@ export class PChessEngine {
       }
       piece.hasMoved = true;
     }
+  }
+
+  moveColLeft(col: number, moveBy: number): number {
+    return col - moveBy;
+  }
+
+  moveColRight(col: number, moveBy: number): number{
+    return col + moveBy;
   }
 
   promotePiece(pos: Position, piece: Piece){

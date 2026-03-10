@@ -4,13 +4,13 @@ import { Board } from '../../../../../../models/board';
 import { Move } from '../../../../../../models/move';
 import { BOARDSIZE } from '../../../../../constants';
 
-import { moveColLeft, moveColRight } from '../../../../moves-utils/moves-utils';
 import { generateNormalMove, generateCaptureMove } from '../../../../moves-utils/moves-factory';
 
-import { checkSquare } from '../../../../../utils/engine-utils';
+import { ChessEngine } from '../../../../../chess-engine';
 
 
 export function getRBQAttacks(
+  engine: ChessEngine,
   piece: Piece,
   pos: Position,
   board: Board,
@@ -28,18 +28,17 @@ export function getRBQAttacks(
         to.row = pos.row + to.row*i;
         //Col logic is modulus magic; it matters which side of the board we're checking
         if(to.col > 0){
-          to.col = moveColRight(pos.col, i);
+          to.col = engine.moveColRight(pos.col, i);
         }else if(to.col < 0){
-          to.col = moveColLeft(pos.col, i);
+          to.col = engine.moveColLeft(pos.col, i);
         }else{
           to.col = pos.col;
         }
 
         //If the square we're checking doesn't exist, check next direction
-        if(to.row > (BOARDSIZE-1) || to.row < 0) break;
+        if(!engine.isInBounds(to, board)) break;
 
-
-        occPiece = checkSquare(to, board);
+        occPiece = engine.checkSquare(to, board);
         if(!occPiece){
           ret.push(generateNormalMove(pos, to));
         }else{

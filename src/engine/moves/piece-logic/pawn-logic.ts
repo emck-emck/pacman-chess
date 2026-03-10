@@ -12,8 +12,10 @@ import { getPawnMoves } from './misc-piece-logic/pawn-moves';
 import { getPawnEnPassant } from './misc-piece-logic/pawn-en-passant';
 
 import { generatePromotionMove } from '../moves-utils/moves-factory';
+import { ChessEngine } from '../../chess-engine';
 
 export function pawnLogic(
+  engine: ChessEngine,
   piece: Piece,
   pos: Position,
   enPassantTarget: (Position | null),
@@ -23,9 +25,9 @@ export function pawnLogic(
   let moves: Move[] = [];
   let ret: Move[] = [];
   const kingPos: Position | null = findKing(colour, board);
-  const possibleAttacks: Move[] = getAttacks(piece, pos, board);
-  const possibleMoves: Move[] = getPawnMoves(piece, pos, board);
-  const possibleEnPassant: Move[] = getPawnEnPassant(piece, pos, enPassantTarget);
+  const possibleAttacks: Move[] = getAttacks(engine, piece, pos, board);
+  const possibleMoves: Move[] = getPawnMoves(engine, piece, pos, board);
+  const possibleEnPassant: Move[] = getPawnEnPassant(engine, piece, pos, enPassantTarget);
   const promoRank: number = piece.colour === 'white'? 0: (BOARDSIZE-1);
   
   if(!kingPos) return [];
@@ -57,6 +59,6 @@ export function pawnLogic(
 
   return ret.filter(move => {
     const sim: Board = simultateMove(move, board);
-    return !isInCheck(colour, kingPos, sim);
+    return !isInCheck(engine, colour, kingPos, sim);
   });
 }
