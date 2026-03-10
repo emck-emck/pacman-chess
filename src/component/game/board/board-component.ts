@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { AsyncPipe, CommonModule } from '@angular/common';
 
 import { Position } from '../../../models/position';
+import { Move } from '../../../models/move';
 
 import { SquareComponent } from '../square/square-component';
 import { GameStateService } from '../../../service/gamestateservice';
@@ -15,9 +16,10 @@ import { PromotionComponent } from '../promotion/promotion-component';
 })
 export class BoardComponent {
   board$ = this.gameState.board$;
-  selectedPiece$ = this.gameState.selected$;
+  lastMove$ = this.gameState.lastMove$;
   legalMoves$ = this.gameState.legalMoves$;
   msg$ = this.gameState.message$;
+  selectedPiece$ = this.gameState.selected$;
 
   legalMoveSet = new Set<string>();
   message: string = '';
@@ -30,17 +32,24 @@ export class BoardComponent {
   }
 
   ngOnInit() {
+    this.gameState.lastMove$.subscribe(move => {
+      this.animateMove(move);
+    });
     this.gameState.legalMoves$.subscribe(moves => {
       this.legalMoveSet = new Set(
         moves.map(m => `${m.row},${m.col}`)
       );
     });
-    this.gameState.selected$.subscribe(sel => {
-      sel? this.selected = `${sel.row},${sel.col}`: this.selected = ''
-    });
     this.gameState.message$.subscribe(m => {
       this.message = m;
     });
+    this.gameState.selected$.subscribe(sel => {
+      sel? this.selected = `${sel.row},${sel.col}`: this.selected = ''
+    });
+  }
+
+  animateMove(move: Move | null) {
+
   }
 
   isLegal(row: number, col: number): boolean {

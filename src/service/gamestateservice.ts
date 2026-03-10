@@ -7,6 +7,7 @@ import { PacmanChessEngine } from '../engine/pacman-chess-engine';
 import { Piece } from '../models/piece';
 import { Position } from '../models/position';
 import { Board } from '../models/board';
+import { Move } from '../models/move';
 
 import { PROMONULL } from '../constants';
 
@@ -15,22 +16,26 @@ export class GameStateService {
   private engine = new PacmanChessEngine();
 
   private selectedInternal: Position | null = null;
+  private lastMove: Move | null = null
   private promotingInternal: number = PROMONULL;
   private promotingPieceInternal: (Position | null) = null;
 
   private boardSubject = new BehaviorSubject<Board>(this.engine.board);
-  private selectedSubject = new BehaviorSubject<Position | null>(null);
+  private lastMoveSubject = new BehaviorSubject<Move |null>(this.lastMove);
   private legalMovesSubject = new BehaviorSubject<Position[]>([]);
-  private turnSubject = new BehaviorSubject<'white' | 'black'>(this.engine.currentTurn);
   private messageSubject = new BehaviorSubject<string>('white to move');
   private promotionSubject = new BehaviorSubject<number>(this.promotingInternal);
+  private selectedSubject = new BehaviorSubject<Position | null>(this.selectedInternal);
+  private turnSubject = new BehaviorSubject<'white' | 'black'>(this.engine.currentTurn);
 
   board$ = this.boardSubject.asObservable();
-  selected$ = this.selectedSubject.asObservable();
+  lastMove$ = this.lastMoveSubject.asObservable();
   legalMoves$ = this.legalMovesSubject.asObservable();
-  turn$ = this.turnSubject.asObservable();
   message$ = this.messageSubject.asObservable();
   promoting$ = this.promotionSubject.asObservable();
+  selected$ = this.selectedSubject.asObservable();
+  turn$ = this.turnSubject.asObservable();
+
 
   handlePieceSelection(pos: Position){
     // Clicking on the same piece deselects it
@@ -93,11 +98,12 @@ export class GameStateService {
     if (validMoveSet.has(this.engine.getPositionKey(pos))) { // If it's a valid move
 
       // CORE LOGIC HERE
-      this.engine.move(this.selectedInternal, pos);
+      this.lastMove = this.engine.move(this.selectedInternal, pos);
 
       // Tell the game board about the upate
       this.boardSubject.next(this.engine.board);
       this.turnSubject.next(this.engine.currentTurn);
+      this.lastMoveSubject.next(this.lastMove);
 
       // Pause click selection on board if promoting a pawn
       if(this.engine.isPromotionMove(pos)){

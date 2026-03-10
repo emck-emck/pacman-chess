@@ -138,7 +138,7 @@ export class ChessEngine {
     return count > 1;
   }
 
-  move(from: Position, to: Position) {
+  move(from: Position, to: Position): Move | null {
     const piece: (Piece | null) = this._board[from.row][from.col];
     let move: (Move | null) = null;
 
@@ -197,7 +197,9 @@ export class ChessEngine {
           break;
       }
       piece.hasMoved = true;
+      return move;
     }
+    return null;
   }
 
   moveColLeft(col: number, moveBy: number): number {
