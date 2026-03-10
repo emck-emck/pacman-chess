@@ -2,3 +2,7 @@
     padding: 0px;
     border-spacing: 0px;
 }
+
+#board-wrapper {
+    position: relative;
+}

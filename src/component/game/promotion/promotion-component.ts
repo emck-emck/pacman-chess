@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AsyncPipe, CommonModule } from '@angular/common';
+import { CommonModule } from '@angular/common';
 
 import { Piece } from '../../../models/piece';
 
@@ -9,21 +9,22 @@ import { GameStateService } from '../../../service/gamestateservice';
   selector: 'promotion',
   templateUrl: './promotion.html',
   styleUrl: './promotion.css',
-  imports: [AsyncPipe, CommonModule],
+  imports: [CommonModule],
 })
 export class PromotionComponent {
 
-  isPromoting$ = this.gameState.promoting$;
-  turn$ = this.gameState.turn$;
-
   promoColour: 'white' | 'black' = 'white';
+  promoRank: number = -1;
 
   constructor(private gameState: GameStateService) {}
 
   ngOnInit(){
     this.gameState.turn$.subscribe(t => {
-        this.promoColour = t;
-    })
+      this.promoColour = t;
+    });
+    this.gameState.promoting$.subscribe(p => {
+      this.promoRank = p;
+    });
   }
 
   handlePromotion(piece: Piece){

@@ -3,7 +3,7 @@ import { Position } from '../../../models/position';
 import { Board } from '../../../models/board';
 import { Move } from '../../../models/move';
 
-import { simultateMove, isInCheck } from '../moves-utils/moves-utils';
+import { simulateMove, isInCheck } from '../moves-utils/moves-utils';
 
 import { getAttacks } from './attacks/attacks';
 import { getCastlingMoves } from './misc-piece-logic/king-castling';
@@ -29,7 +29,7 @@ export function kingLogic(
   }
 
   moves = moves.filter(move => {
-    const sim: Board = simultateMove(move, board);
+    const sim: Board = simulateMove(move, board);
     return !isInCheck(engine, colour, move.to, sim);
   });
 

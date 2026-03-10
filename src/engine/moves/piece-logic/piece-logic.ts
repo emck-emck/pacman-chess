@@ -3,7 +3,7 @@ import { Position } from '../../../models/position';
 import { Board } from '../../../models/board';
 import { Move } from '../../../models/move';
 
-import { simultateMove, isInCheck, findKing } from '../moves-utils/moves-utils';
+import { simulateMove, isInCheck, findKing } from '../moves-utils/moves-utils';
 
 import { getAttacks } from './attacks/attacks';
 import { ChessEngine } from '../../chess-engine';
@@ -21,7 +21,7 @@ export function pieceLogic(
   if (!kingPos) return [];
 
   return possible.filter(move => {
-    const sim: Board = simultateMove(move, board);
+    const sim: Board = simulateMove(move, board);
     return !isInCheck(engine, colour, kingPos, sim);
   });
 }

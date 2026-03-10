@@ -1,5 +1,5 @@
 import { ChessEngine } from "./chess-engine";
-import { BOARDSIZE } from "./constants";
+import { BOARDSIZE } from "../constants";
 import { Position } from "../models/position";
 import { Board } from "../models/board";
 

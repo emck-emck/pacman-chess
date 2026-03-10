@@ -1,18 +1,24 @@
-<div *ngIf="isPromoting$ | async">
-    <div (click)="handlePromotion({type: 'queen', colour: promoColour, hasMoved: true})">
+<div 
+    id="promotion-dialog" 
+    *ngIf="promoRank >= 0" 
+    [style.left.px]="promoRank*60"
+    [class.white]="promoColour === 'white'"
+    [class.black]="promoColour === 'black'"
+    >
+    <div class="promotion-box" (click)="handlePromotion({type: 'queen', colour: promoColour, hasMoved: true})">
         <span *ngIf="promoColour === 'white'">♕</span>
-        <span *ngIf="!(promoColour === 'white')")>♛</span>
+        <span *ngIf="!(promoColour === 'white')">♛</span>
     </div>
-    <div (click)="handlePromotion({type: 'rook', colour: promoColour, hasMoved: true})">
+    <div class="promotion-box" (click)="handlePromotion({type: 'rook', colour: promoColour, hasMoved: true})">
         <span *ngIf="promoColour === 'white'">♖</span>
-        <span *ngIf="!(promoColour === 'white')")>♜</span>
+        <span *ngIf="!(promoColour === 'white')">♜</span>
     </div>
-    <div (click)="handlePromotion({type: 'bishop', colour: promoColour, hasMoved: true})">
+    <div class="promotion-box" (click)="handlePromotion({type: 'bishop', colour: promoColour, hasMoved: true})">
         <span *ngIf="promoColour === 'white'">♗</span>
-        <span *ngIf="!(promoColour === 'white')")>♝</span>
+        <span *ngIf="!(promoColour === 'white')">♝</span>
     </div>
-    <div (click)="handlePromotion({type: 'knight', colour: promoColour, hasMoved: true})">
+    <div class="promotion-box" (click)="handlePromotion({type: 'knight', colour: promoColour, hasMoved: true})">
         <span *ngIf="promoColour === 'white'">♘</span>
-        <span *ngIf="!(promoColour === 'white')")>♞</span>
+        <span *ngIf="!(promoColour === 'white')">♞</span>
     </div>
 </div>

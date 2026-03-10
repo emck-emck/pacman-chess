@@ -42,7 +42,7 @@ export function isInCheck(engine: ChessEngine, colour: Colour, kingPos: Position
   return false;
 }
 
-export function simultateMove(move: Move, board: Board): Board{
+export function simulateMove(move: Move, board: Board): Board{
   let simBoard: Board = structuredClone(board);
   const piece: (Piece | null) = simBoard[move.from.row][move.from.col];
   // Implement capture tracking
@@ -52,20 +52,13 @@ export function simultateMove(move: Move, board: Board): Board{
       // MOVE LOGIC
       switch(move.type){
         case 'normal':
-          simBoard[move.from.row][move.from.col] = null;
-          simBoard[move.to.row][move.to.col] = piece;
-          break;
         case 'capture':
-          simBoard[move.from.row][move.from.col] = null;
-          simBoard[move.to.row][move.to.col] = piece;
-          break;
         case 'en-passant':
+        case 'promotion':
           simBoard[move.from.row][move.from.col] = null;
           simBoard[move.to.row][move.to.col] = piece;
           break;
         case 'castle':
-          break;
-        case 'promotion':
           break;
       }
   return simBoard;
