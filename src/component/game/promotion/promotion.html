@@ -1,4 +1,10 @@
-<div id="promotion-dialog" *ngIf="isPromoting$ | async">
+<div 
+    id="promotion-dialog" 
+    *ngIf="promoRank >= 0" 
+    [style.left.px]="promoRank*60"
+    [class.white]="promoColour === 'white'"
+    [class.black]="promoColour === 'black'"
+    >
     <div class="promotion-box" (click)="handlePromotion({type: 'queen', colour: promoColour, hasMoved: true})">
         <span *ngIf="promoColour === 'white'">♕</span>
         <span *ngIf="!(promoColour === 'white')">♛</span>

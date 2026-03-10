@@ -2,7 +2,7 @@ import { Piece } from '../../../../../../models/piece';
 import { Position } from '../../../../../../models/position';
 import { Board } from '../../../../../../models/board';
 import { Move } from '../../../../../../models/move';
-import { BOARDSIZE } from '../../../../../constants';
+import { BOARDSIZE } from '../../../../../../constants';
 
 import { generateNormalMove, generateCaptureMove } from '../../../../moves-utils/moves-factory';
 

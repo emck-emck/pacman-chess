@@ -3,9 +3,9 @@ import { Position } from '../../../models/position';
 import { Board } from '../../../models/board';
 import { Move } from '../../../models/move';
 
-import { BOARDSIZE } from '../../constants';
+import { BOARDSIZE } from '../../../constants';
 
-import { simultateMove, isInCheck, findKing } from '../moves-utils/moves-utils';
+import { simulateMove, isInCheck, findKing } from '../moves-utils/moves-utils';
 
 import { getAttacks } from './attacks/attacks';
 import { getPawnMoves } from './misc-piece-logic/pawn-moves';
@@ -58,7 +58,7 @@ export function pawnLogic(
   }
 
   return ret.filter(move => {
-    const sim: Board = simultateMove(move, board);
+    const sim: Board = simulateMove(move, board);
     return !isInCheck(engine, colour, kingPos, sim);
   });
 }

@@ -8,12 +8,14 @@ import { Piece } from '../models/piece';
 import { Position } from '../models/position';
 import { Board } from '../models/board';
 
+import { PROMONULL } from '../constants';
+
 @Injectable({ providedIn: 'root' })
 export class GameStateService {
   private engine = new PacmanChessEngine();
 
   private selectedInternal: Position | null = null;
-  private promotingInternal: boolean = false;
+  private promotingInternal: number = PROMONULL;
   private promotingPieceInternal: (Position | null) = null;
 
   private boardSubject = new BehaviorSubject<Board>(this.engine.board);
@@ -21,7 +23,7 @@ export class GameStateService {
   private legalMovesSubject = new BehaviorSubject<Position[]>([]);
   private turnSubject = new BehaviorSubject<'white' | 'black'>(this.engine.currentTurn);
   private messageSubject = new BehaviorSubject<string>('white to move');
-  private promotionSubject = new BehaviorSubject<boolean>(false);
+  private promotionSubject = new BehaviorSubject<number>(this.promotingInternal);
 
   board$ = this.boardSubject.asObservable();
   selected$ = this.selectedSubject.asObservable();
@@ -52,7 +54,7 @@ export class GameStateService {
     if(this.promotingPieceInternal){
       this.engine.promotePiece(this.promotingPieceInternal, piece);
       this.promotingPieceInternal = null;
-      this.promotingInternal = false;
+      this.promotingInternal = PROMONULL;
 
       // End promotion state
       this.promotionSubject.next(this.promotingInternal);
@@ -69,7 +71,7 @@ export class GameStateService {
   handleSquareClick(pos: Position) {
     if(this.engine.gameOver) return; // Don't register board clicks for ended game
 
-    if(this.promotingInternal) return; // Don't register board clicks if promoting a pawn
+    if(this.promotingInternal > PROMONULL) return; // Don't register board clicks if promoting a pawn
 
     const piece: (Piece | null) = this.engine.getPieceAt(pos);
 
@@ -99,9 +101,9 @@ export class GameStateService {
 
       // Pause click selection on board if promoting a pawn
       if(this.engine.isPromotionMove(pos)){
-        this.promotingInternal = true;
+        this.promotingInternal = pos.col;
         this.promotingPieceInternal = pos;
-        this.promotionSubject.next(true);
+        this.promotionSubject.next(this.promotingInternal);
       }
     }
 
@@ -120,7 +122,7 @@ export class GameStateService {
       msg = `Game over, ${this.engine.currentTurn} wins!`;
     }else if(this.engine.isInCheck){
       msg = `${this.engine.currentTurn} to move, is in check`;
-    }else if(this.promotingInternal){
+    }else if(this.promotingInternal > PROMONULL){
       msg = `${this.engine.currentTurn} to promote`
     }else{
       msg = `${this.engine.currentTurn} to move`;

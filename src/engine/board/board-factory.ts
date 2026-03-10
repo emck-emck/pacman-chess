@@ -1,6 +1,6 @@
 import { Board } from '../../models/board';
 import { Piece, PieceType, Colour } from '../../models/piece';
-import { BOARDSIZE } from '../constants';
+import { BOARDSIZE } from '../../constants';
 
 const backRank: PieceType[] = [
   'rook',

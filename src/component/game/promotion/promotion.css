@@ -1,3 +1,16 @@
+#promotion-dialog {
+  position: absolute;
+  z-index: 2; 
+}
+
+#promotion-dialog.white {
+  top: 0;
+}
+
+#promotion-dialog.black {
+  bottom: 0;
+}
+
 .promotion-box {
   background-color: white;
   width: 60px;

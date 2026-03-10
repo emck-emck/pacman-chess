@@ -6,10 +6,3 @@
 #board-wrapper {
     position: relative;
 }
-
-promotion {
-  position: absolute;
-  x: 0px;
-  y: 0px;
-  z-index: 2;
-}
