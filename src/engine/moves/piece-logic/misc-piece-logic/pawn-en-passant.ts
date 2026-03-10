@@ -3,9 +3,10 @@ import { Position } from '../../../../models/position';
 import { Move } from '../../../../models/move';
 
 import { generateEnPassantMove } from '../../moves-utils/moves-factory';
-import { moveColLeft, moveColRight } from '../../moves-utils/moves-utils';
+import { ChessEngine } from '../../../chess-engine';
 
 export function getPawnEnPassant(
+  engine: ChessEngine,
   piece: Piece,
   pos: Position,
   enPassantTarget: (Position | null)
@@ -13,8 +14,8 @@ export function getPawnEnPassant(
   let ret: Move[] = [];
   const up: number = piece.colour == 'white'? -1: 1;
   const enPassantRow: number = pos.row + up;
-  const captureLeft: Position = {row: pos.row, col: moveColLeft(pos.col, 1)};
-  const captureRight: Position = {row: pos.row, col: moveColRight(pos.col, 1)};
+  const captureLeft: Position = {row: pos.row, col: engine.moveColLeft(pos.col, 1)};
+  const captureRight: Position = {row: pos.row, col: engine.moveColRight(pos.col, 1)};
 
   // Bail if no en passant target
   if(!enPassantTarget) return ret;
