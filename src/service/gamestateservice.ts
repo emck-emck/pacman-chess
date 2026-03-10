@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
-import { PChessEngine } from '../engine/pchessengine';
+import { ChessEngine } from '../engine/chess-engine';
+import { PacmanChessEngine } from '../engine/pacman-chess-engine';
 
 import { Piece } from '../models/piece';
 import { Position } from '../models/position';
@@ -9,7 +10,7 @@ import { Board } from '../models/board';
 
 @Injectable({ providedIn: 'root' })
 export class GameStateService {
-  private engine = new PChessEngine();
+  private engine = new PacmanChessEngine();
 
   private selectedInternal: Position | null = null;
   private promotingInternal: boolean = false;

@@ -9,10 +9,11 @@ import { getKnightAttacks } from './piece-attacks/knight-attacks';
 import { getBishopAttacks } from './piece-attacks/bishop-attacks';
 import { getQueenAttacks } from './piece-attacks/queen-attacks';
 import { getKingAttacks } from './piece-attacks/king-attacks';
+import { ChessEngine } from '../../../chess-engine';
 
 const moveMap: Record<
   PieceType,
-  (piece: Piece, pos: Position, board: Board) => Move[]
+  (engine: ChessEngine, piece: Piece, pos: Position, board: Board) => Move[]
 > = {
   pawn: getPawnAttacks,
   rook: getRookAttacks,
@@ -23,6 +24,7 @@ const moveMap: Record<
 };
 
 export function getAttacks(
+  engine: ChessEngine,
   piece: (Piece | null),
   pos: Position,
   board: Board
@@ -30,5 +32,5 @@ export function getAttacks(
 
   if(!piece) return [];
   const generator = moveMap[piece.type];
-  return generator(piece, pos, board);
+  return generator(engine, piece, pos, board);
 }

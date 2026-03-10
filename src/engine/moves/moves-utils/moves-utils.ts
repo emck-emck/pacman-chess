@@ -2,7 +2,8 @@ import { Position } from '../../../models/position';
 import { Board } from '../../../models/board';
 import { Piece, Colour } from '../../../models/piece';
 import { Move } from '../../../models/move';
-import { BOARDSIZE } from '../../constants';
+
+import { ChessEngine } from '../../chess-engine';
 
 import { positionKey } from '../../utils/engine-utils';
 import { getAttacks } from '../piece-logic/attacks/attacks';
@@ -20,7 +21,7 @@ export function findKing (colour: Colour, board: Board): Position | null{
   return null;
 }
 
-export function isInCheck(colour: Colour, kingPos: Position, board: Board): boolean{
+export function isInCheck(engine: ChessEngine, colour: Colour, kingPos: Position, board: Board): boolean{
   for(let row = 0; row < board.length; row++){
     for(let col = 0; col < board[row].length; col++){
       const piece: Piece | null = board[row][col];
@@ -28,7 +29,7 @@ export function isInCheck(colour: Colour, kingPos: Position, board: Board): bool
       if(piece.colour == colour) continue; //Don't check ally piece attacks
       
       const pos: Position = {row: row, col: col}; //Get piece position
-      const attacks = getAttacks(piece, pos, board);
+      const attacks = getAttacks(engine, piece, pos, board);
       if (attacks.some(p =>                                                                                                                                    
         p.to.row === kingPos.row &&
         p.to.col === kingPos.col
@@ -39,15 +40,6 @@ export function isInCheck(colour: Colour, kingPos: Position, board: Board): bool
   }
 
   return false;
-}
-
-//MOVEBY MUST BE LESS THAN BOARD SIZE
-export function moveColLeft(col: number, moveBy: number): number {
-  return ((col + (BOARDSIZE - moveBy)) % BOARDSIZE)
-}
-
-export function moveColRight(col: number, moveBy: number): number{
-  return ((col + moveBy) % BOARDSIZE);
 }
 
 export function simultateMove(move: Move, board: Board): Board{
