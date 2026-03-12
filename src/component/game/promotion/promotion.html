@@ -6,19 +6,15 @@
     [class.black]="promoColour === 'black'"
     >
     <div class="promotion-box" (click)="handlePromotion({type: 'queen', colour: promoColour, hasMoved: true})">
-        <span *ngIf="promoColour === 'white'">♕</span>
-        <span *ngIf="!(promoColour === 'white')">♛</span>
+        <span>♛</span>
     </div>
     <div class="promotion-box" (click)="handlePromotion({type: 'rook', colour: promoColour, hasMoved: true})">
-        <span *ngIf="promoColour === 'white'">♖</span>
-        <span *ngIf="!(promoColour === 'white')">♜</span>
+        <span>♜</span>
     </div>
     <div class="promotion-box" (click)="handlePromotion({type: 'bishop', colour: promoColour, hasMoved: true})">
-        <span *ngIf="promoColour === 'white'">♗</span>
-        <span *ngIf="!(promoColour === 'white')">♝</span>
+        <span>♝</span>
     </div>
     <div class="promotion-box" (click)="handlePromotion({type: 'knight', colour: promoColour, hasMoved: true})">
-        <span *ngIf="promoColour === 'white'">♘</span>
-        <span *ngIf="!(promoColour === 'white')">♞</span>
+        <span>♞</span>
     </div>
 </div>

@@ -1,1 +1,4 @@
-<span class="piece">{{displayPiece}}</span>
+<span class="piece" 
+    [class.light]="piece && piece.colour==='white'"
+    [class.dark]="piece && piece.colour!=='white'"
+    >{{displayPiece}}</span>

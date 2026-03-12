@@ -1,3 +1,11 @@
 .piece {
   font-size: 32px;
 }
+
+.piece.light {
+  color: yellow;
+}
+
+.piece.dark {
+  color: red;
+}

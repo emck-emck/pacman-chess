@@ -5,16 +5,21 @@
 
 #promotion-dialog.white {
   top: 0;
+  color: yellow;
 }
 
 #promotion-dialog.black {
   bottom: 0;
+  color: red;
 }
 
 .promotion-box {
-  background-color: white;
-  width: 60px;
-  height: 60px;
+  border-color: white;
+  border-style: solid;
+  background-color: black;
+  border-width: 3px;
+  width: 57px;
+  height: 57px;
   display: flex;
   justify-content: center;
   align-items: center;
