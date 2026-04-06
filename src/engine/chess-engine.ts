@@ -182,7 +182,6 @@ export class ChessEngine {
           // Move king
           this._board[move.from.row][move.from.col] = null;
           this._board[move.to.row][move.to.col] = piece;
-          this.handleTurnEnd();
           //Move rook
           if(move.secondaryMoves){
             const rook: (Piece | null) = this._board[move.secondaryMoves.from.row][move.secondaryMoves.from.col]

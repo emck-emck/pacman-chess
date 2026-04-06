@@ -2,6 +2,7 @@ import { Piece } from '../../../../../../models/piece';
 import { Position } from '../../../../../../models/position';
 import { Board } from '../../../../../../models/board';
 import { Move } from '../../../../../../models/move';
+import { Direction } from '../../../../../../models/direction';
 import { BOARDSIZE } from '../../../../../../constants';
 
 import { generateNormalMove, generateCaptureMove } from '../../../../moves-utils/moves-factory';
@@ -14,7 +15,7 @@ export function getRBQAttacks(
   piece: Piece,
   pos: Position,
   board: Board,
-  directions: Position[]
+  directions: Direction[]
 ): Move[] {
   let to: Position;
   let occPiece: Piece | null = null;
@@ -40,10 +41,10 @@ export function getRBQAttacks(
 
         occPiece = engine.checkSquare(to, board);
         if(!occPiece){
-          ret.push(generateNormalMove(pos, to));
+          ret.push(generateNormalMove(piece, pos, to, d));
         }else{
           if(piece.colour != occPiece.colour){
-            ret.push(generateCaptureMove(pos, to, to));
+            ret.push(generateCaptureMove(piece, pos, to, to, d));
           }
           break;
         }

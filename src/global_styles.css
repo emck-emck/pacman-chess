@@ -2,3 +2,22 @@ body {
     color: white;
     background-color: black;
 }
+
+.floating-wrapper {
+  position: absolute;
+  transition: left 1000ms ease, top 1000ms ease;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.floating-piece {
+  font-size: 32px;
+}
+
+.floating-piece.white {
+    color: pink;
+}
+
+.floating-piece.black {
+    color: cyan;
+}

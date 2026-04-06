@@ -12,7 +12,7 @@ export function getPawnMoves(
   pos: Position,
   board: Board
 ): Move[] {
-  const up: number = piece.colour == 'white'? -1: 1;
+  const up: -1 | 0 | 1 = piece.colour == 'white'? -1: 1;
   const moveUpOne: Position = {row: pos.row + up, col: pos.col};
   const moveUpTwo: Position = {row: pos.row + (up*2), col: pos.col}; 
 
@@ -22,7 +22,7 @@ export function getPawnMoves(
   // Check in front of piece
   occPiece = engine.checkSquare(moveUpOne, board);
   if (!occPiece) {
-    ret.push(generateNormalMove(pos, moveUpOne));
+    ret.push(generateNormalMove(piece, pos, moveUpOne, {row: up, col: 0}));
   }
 
     //If first move for pawn and nobody is on the square in front
@@ -30,7 +30,7 @@ export function getPawnMoves(
     // Check two squares in front of piece
     occPiece = engine.checkSquare(moveUpTwo, board);
     if (!occPiece) {
-      ret.push(generateNormalMove(pos, moveUpTwo));
+      ret.push(generateNormalMove(piece, pos, moveUpTwo, {row: up, col: 0}));
     }
   }
 

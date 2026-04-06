@@ -5,6 +5,7 @@ import { Move } from '../../../../../models/move';
 
 import { getRBQAttacks } from './misc-attacks/r-b-q-attacks';
 import { ChessEngine } from '../../../../chess-engine';
+import { Direction } from '../../../../../models/direction';
 
 export function getBishopAttacks(
   engine: ChessEngine,
@@ -13,7 +14,7 @@ export function getBishopAttacks(
   board: Board
 ): Move[] {
   
-  const bishopDirections: Position[] = [
+  const bishopDirections: Direction[] = [
     {row: -1, col: -1},
     {row: -1, col: 1},
     {row: 1, col: -1},

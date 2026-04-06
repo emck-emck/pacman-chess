@@ -49,7 +49,7 @@ export function pawnLogic(
     if(m.to.row === promoRank){
       const promoPieces: PieceType[] = ['queen', 'rook', 'bishop', 'knight'];
       for(const p of promoPieces){
-        const promoMove: Move = generatePromotionMove(m.from, m.to, p, m.capture);
+        const promoMove: Move = generatePromotionMove(piece, m.from, m.to, p, m.direction, m.capture);
         ret.push(promoMove);
       }
     }else{

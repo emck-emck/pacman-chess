@@ -1,12 +1,14 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, ViewChild } from '@angular/core';
 import { AsyncPipe, CommonModule } from '@angular/common';
 
 import { Position } from '../../../models/position';
 import { Move } from '../../../models/move';
 
+import { AnimationService } from '../../../service/animation-service';
 import { SquareComponent } from '../square/square-component';
 import { GameStateService } from '../../../service/gamestateservice';
 import { PromotionComponent } from '../promotion/promotion-component';
+import { PieceType } from '../../../models/piece';
 
 @Component({
   selector: 'board',
@@ -21,15 +23,22 @@ export class BoardComponent {
   msg$ = this.gameState.message$;
   selectedPiece$ = this.gameState.selected$;
 
+  @ViewChild('animationLayer', {static: true})
+  animateBoard!: ElementRef<HTMLElement>;
+
+  @ViewChild('board', {static: true})
+  boardRef!: ElementRef<HTMLElement>;
+
+  hiddenSquare: {row: number, col: number} | null = null;
   legalMoveSet = new Set<string>();
   message: string = '';
   selected: string = '';
 
-  constructor(private gameState: GameStateService) {}
-
-  onSquareClick(pos: Position) {
-    this.gameState.handleSquareClick(pos);
-  }
+  constructor(
+    private gameState: GameStateService, 
+    private animationService: AnimationService, 
+    private cd: ChangeDetectorRef
+  ) {}
 
   ngOnInit() {
     this.gameState.lastMove$.subscribe(move => {
@@ -48,8 +57,36 @@ export class BoardComponent {
     });
   }
 
-  animateMove(move: Move | null) {
+  ngAfterViewInit() {
+    this.animationService.init(
+      this.boardRef.nativeElement,
+      this.animateBoard.nativeElement
+    );
+  }
 
+  async animateMove(move: Move | null){
+    if(!move) return;
+
+    this.animationStart(move);
+
+    await this.animationService.animateMove(move);
+
+    this.animationEnd();
+
+    this.cd.detectChanges();
+  }
+
+  animationEnd(){
+    this.hiddenSquare = null;
+  }
+
+  animationStart(move: Move){
+    this.hiddenSquare = move.to;
+  }
+
+  isHiddenSquare(row: number, col: number){
+    if (!this.hiddenSquare) return false;
+    return this.hiddenSquare.row === row && this.hiddenSquare.col === col;
   }
 
   isLegal(row: number, col: number): boolean {
@@ -62,5 +99,9 @@ export class BoardComponent {
 
   isSelected(row: number, col: number): boolean{
     return (this.selected == `${row},${col}`);
+  }
+
+  onSquareClick(pos: Position) {
+    this.gameState.handleSquareClick(pos);
   }
 }

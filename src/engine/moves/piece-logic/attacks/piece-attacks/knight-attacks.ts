@@ -14,14 +14,14 @@ export function getKnightAttacks(
 ): Move[] {
 
   const knightMoves: Position[] = [
-    {row: pos.row-2, col: engine.moveColRight(pos.col, 1)},
-    {row: pos.row-2, col: engine.moveColLeft(pos.col, 1)},
-    {row: pos.row-1, col: engine.moveColRight(pos.col, 2)},
-    {row: pos.row-1, col: engine.moveColLeft(pos.col, 2)},
-    {row: pos.row+1, col: engine.moveColRight(pos.col, 2)},
-    {row: pos.row+1, col: engine.moveColLeft(pos.col, 2)},
-    {row: pos.row+2, col: engine.moveColRight(pos.col, 1)},
-    {row: pos.row+2, col: engine.moveColLeft(pos.col, 1)}
+    {row: -2, col: 1},
+    {row: -2, col: -1},
+    {row: -1, col: 2},
+    {row: -1, col: -2},
+    {row: +1, col: 2},
+    {row: +1, col: -2},
+    {row: +2, col: 1},
+    {row: +2, col: -1}
   ];
 
   return getKNAttacks(engine, piece, pos, board, knightMoves);

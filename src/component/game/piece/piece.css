@@ -3,9 +3,9 @@
 }
 
 .piece.light {
-  color: yellow;
+  color: pink;
 }
 
 .piece.dark {
-  color: red;
+  color: cyan;
 }

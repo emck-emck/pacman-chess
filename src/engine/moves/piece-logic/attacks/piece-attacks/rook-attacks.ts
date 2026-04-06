@@ -5,6 +5,7 @@ import { Move } from '../../../../../models/move';
 
 import { getRBQAttacks } from './misc-attacks/r-b-q-attacks';
 import { ChessEngine } from '../../../../chess-engine';
+import { Direction } from '../../../../../models/direction';
 
 export function getRookAttacks(
   engine: ChessEngine,
@@ -13,7 +14,7 @@ export function getRookAttacks(
   board: Board
 ): Move[] {
   
-  const rookDirections: Position[] = [
+  const rookDirections: Direction[] = [
     {row: -1, col: 0},
     {row: 1, col: 0},
     {row: 0, col: -1},

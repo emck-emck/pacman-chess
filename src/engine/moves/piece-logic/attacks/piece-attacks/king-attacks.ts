@@ -13,14 +13,14 @@ export function getKingAttacks(
   board: Board
 ): Move[] {
   const kingMoves: Position[] = [
-    {row: pos.row -1, col: engine.moveColLeft(pos.col, 1)},
-    {row: pos.row -1, col: pos.col},
-    {row: pos.row -1, col: engine.moveColRight(pos.col, 1)},
-    {row: pos.row, col: engine.moveColLeft(pos.col, 1)},
-    {row: pos.row, col: engine.moveColRight(pos.col, 1)},
-    {row: pos.row + 1, col: engine.moveColLeft(pos.col, 1)},
-    {row: pos.row + 1, col: pos.col},
-    {row: pos.row + 1, col: engine.moveColRight(pos.col, 1)}
+    {row: -1, col: -1},
+    {row: -1, col: 0},
+    {row: -1, col: 1},
+    {row: 0, col: -1},
+    {row: 0, col: 1},
+    {row: 1, col: -1},
+    {row: 1, col: 0},
+    {row: 1, col: 1}
   ];
 
   return getKNAttacks(engine, piece, pos, board, kingMoves);

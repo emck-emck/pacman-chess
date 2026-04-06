@@ -34,7 +34,7 @@ export function getCastlingMoves(engine: ChessEngine, king: Piece, pos: Position
   
   for(const r of rooks){
     //Figure out if it's the rook to the left or to the right
-    const direction: number = (pos.col > r.col)? -1: 1; 
+    const direction: -1 | 0 | 1 = (pos.col > r.col)? -1: 1; 
 
     //Check squares between rook and king are empty
     let clear: boolean = true;
@@ -60,7 +60,7 @@ export function getCastlingMoves(engine: ChessEngine, king: Piece, pos: Position
         const to: Position = {row: pos.row, col: (pos.col + (direction*2))};
         const rFrom: Position = r;
         const rTo: Position = {row: r.row, col: (pos.col + direction)};
-        ret.push(generateCastlingMove(from, to, rFrom, rTo));
+        ret.push(generateCastlingMove(king, from, to, rFrom, rTo, {row: 0, col: direction}));
     }
     
   }

@@ -16,6 +16,7 @@ export class SquareComponent {
   @Input({ required: true }) row!: number;
   @Input({ required: true }) col!: number;
   @Input({ required: true }) piece!: Piece | null;
+  @Input({ required: true }) isHidden!: boolean;
   @Input({ required: true }) isLight!: boolean;
   @Input({ required: true }) isLegal!: boolean;
   @Input({ required: true }) isSelected!: boolean;

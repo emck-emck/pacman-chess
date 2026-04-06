@@ -13,7 +13,7 @@ export function getPawnAttacks(
   pos: Position,
   board: Board
 ): Move[] {
-  const up: number = piece.colour == 'white'? -1: 1;
+  const up: -1 | 0 | 1 = piece.colour == 'white'? -1: 1;
   const captureLeft: Position = {row: pos.row + up, col: engine.moveColLeft(pos.col, 1)};
   const captureRight: Position = {row: pos.row + up, col: engine.moveColRight(pos.col, 1)};
 
@@ -23,13 +23,13 @@ export function getPawnAttacks(
   //Check diagonal left of piece
   occPiece = engine.checkSquare(captureLeft, board);
   if (occPiece && (occPiece.colour != piece.colour)) {
-    ret.push(generateCaptureMove(pos, captureLeft, captureLeft));
+    ret.push(generateCaptureMove(piece, pos, captureLeft, captureLeft, {row: up, col: -1}));
   }
 
   //Check diagonal right of piece
   occPiece = engine.checkSquare(captureRight, board);
   if (occPiece && (occPiece.colour != piece.colour)) {
-    ret.push(generateCaptureMove(pos, captureRight, captureRight));
+    ret.push(generateCaptureMove(piece, pos, captureRight, captureRight, {row: up, col: 1}));
   }
 
   return ret;

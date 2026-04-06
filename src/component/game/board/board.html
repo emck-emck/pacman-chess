@@ -1,6 +1,6 @@
 <h3>{{message}}</h3>
 <div class="fakewall"></div>
-<div id="board-wrapper">
+<div id="board-wrapper" #board>
   <promotion></promotion>
   <table>
     @for (row of board$ | async; track $index; let rowIndex = $index){
@@ -8,9 +8,13 @@
       @for (square of row; track $index; let colIndex = $index){
       <td>
         <square
+          class="s"
+          [attr.row]="rowIndex"
+          [attr.col]="colIndex"
           [row]="rowIndex"
           [col]="colIndex"
           [piece]="square"
+          [isHidden]="isHiddenSquare(rowIndex, colIndex)"
           [isLight]="isLight(rowIndex, colIndex)"
           [isLegal]="isLegal(rowIndex, colIndex)"
           [isSelected]="isSelected(rowIndex, colIndex)"
@@ -21,5 +25,6 @@
     </tr>
     }
   </table>
+  <div class="animation-layer" #animationLayer></div>
 </div>
 <div class="fakewall"></div>

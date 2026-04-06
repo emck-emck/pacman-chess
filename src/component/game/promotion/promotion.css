@@ -5,12 +5,12 @@
 
 #promotion-dialog.white {
   top: 0;
-  color: yellow;
+  color: pink;
 }
 
 #promotion-dialog.black {
   bottom: 0;
-  color: red;
+  color: cyan;
 }
 
 .promotion-box {

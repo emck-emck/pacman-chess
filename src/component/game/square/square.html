@@ -7,5 +7,5 @@
   [class.selected]="isSelected" 
   (click)="handleSquareClick()">
   <div *ngIf="isLegal && !piece" class="legal-dot"></div>
-  <piece *ngIf="piece" [piece]="piece"></piece>
+  <piece *ngIf="piece && !isHidden" [piece]="piece"></piece>
 </div>
